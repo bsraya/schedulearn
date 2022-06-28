@@ -1,20 +1,26 @@
 package handlers
 
 import (
+	"io/ioutil"
 	"log"
 	"net/http"
+	"schedulearn/docker"
 )
 
 type Post struct {
 	Logger *log.Logger
 }
 
-func NewPost(logger *log.Logger) *Get {
-	return &Get{logger}
+func NewPost(logger *log.Logger) *Post {
+	return &Post{logger}
 }
 
 func (post *Post) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK) // 200 OK
-	w.Write([]byte("Received request for 'POST'\n"))
 	post.Logger.Println("Received request for 'POST'")
+	// read json file from the request body
+	data, _ := ioutil.ReadAll(r.Body)
+	post.Logger.Println("File read: ", string(data))
+
+	dm := docker.NewDockerManager()
 }
