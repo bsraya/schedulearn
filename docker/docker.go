@@ -1,9 +1,9 @@
-package docker
+package main
 
 import (
 	"context"
+	"fmt"
 	"io"
-	"log"
 	"os"
 
 	"github.com/docker/docker/api/types"
@@ -12,88 +12,55 @@ import (
 	"github.com/docker/docker/pkg/stdcopy"
 )
 
-type DockerManager struct {
-	ctx *context.Context
-	cli *client.Client
-	logger *log.Logger
-}
+func main() {
 
-func NewDockerManager(ctx *context.Context, cli *client.Client, logger *log.Logger) *DockerManager {
-	return &DockerManager{ctx, cli, logger}
-}
-
-// pull image "docker.io/library/alpine"
-func (dm*DockerManager)pullimage() {
-	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
-	if err != nil {
-		panic(err)
-	}
-	resp, err := cli.ImagePull(ctx, "docker.io/library/alpine", types.ImagePullOptions{})
-	if err != nil {
-		panic(err)
-	}
-	io.Copy(os.Stdout, resp)
-}
-
-
-func (dm*DockerManager) createcontainer(){
+	// create a docker client
+	ctx := context.Background()
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
 		panic(err)
 	}
 
+	imageName := "docker.io/library/alpine:latest"
+	// pull the image if it doesn't exist
+	out, err := cli.ImagePull(ctx, imageName, types.ImagePullOptions{})
+	if err != nil {
+		panic(err)
+	}
+	defer out.Close()
+	io.Copy(os.Stdout, out)
+
+	// create a container
 	resp, err := cli.ContainerCreate(ctx, &container.Config{
-		Image: "alpine",
-		Cmd:   []string{"echo", "hello world"},
-		Tty:   false,
+		Image: imageName,
 	}, nil, nil, nil, "")
 	if err != nil {
 		panic(err)
 	}
-	
+
+	// start the container
 	if err := cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
 		panic(err)
 	}
 
-	statusCh, errCh := cli.ContainerWait(ctx, resp.ID, container.WaitConditionNotRunning)
-	select {
-	case err := <-errCh:
-		if err != nil {
-			panic(err)
-		}
-	case <-statusCh:
-	}
+	fmt.Println(resp.ID)
 
-	out, err := cli.ContainerLogs(ctx, resp.ID, types.ContainerLogsOptions{ShowStdout: true})
+	// wait for the container to finish
+	out, err = cli.ContainerLogs(ctx, resp.ID, types.ContainerLogsOptions{
+		ShowStdout: true,
+		ShowStderr: true,
+		Follow:     true,
+	})
 	if err != nil {
 		panic(err)
 	}
+	defer out.Close()
 
+	// OUTPUT FROM CONTAINER
 	stdcopy.StdCopy(os.Stdout, os.Stderr, out)
 
-	}
-
-func (dm*DockerManager)showoutput() {
-	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
-	if err != nil {
-		panic(err)
-	}
-
-	out, err := cli.ContainerLogs(ctx, "", types.ContainerLogsOptions{ShowStdout: true})
-	if err != nil {
-		panic(err)
-	}
-
-	stdcopy.StdCopy(os.Stdout, os.Stderr, out)
-}
-
-func deletecontainer(){
-	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
-	if err != nil {
-		panic(err)
-	}
-
-	if err := cli.ContainerRemove(ctx, "", types.ContainerRemoveOptions{}); err != nil {
+	// delete container
+	if err := cli.ContainerRemove(ctx, resp.ID, types.ContainerRemoveOptions{}); err != nil {
 		panic(err)
 	}
 }
