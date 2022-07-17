@@ -10,13 +10,12 @@ engine = create_engine(config.DB_URL, echo=True)
 
 class Job(SQLModel, table=True):
     "Record of a job that has been scheduled"
-
     id: Optional[int] = Field(primary_key=True, default=None)
     name: str = Field(default=None)
     type: str = Field(default=None)
     container_image: str = Field(default=None)
     command: str = Field(default=None)
-    created_at: datetime = Field(default=None)
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
     started_at: Optional[datetime] = Field(default=None)
     completed_at: Optional[datetime] = Field(default=None)
     no_of_gpus: int = Field(default=None)
@@ -28,7 +27,6 @@ class Job(SQLModel, table=True):
 
 class Server(SQLModel, table=True):
     "Keeps track of the servers in the cluster"
-
     id: Optional[int] = Field(primary_key=True, default=None)
     host_name: str = Field()
 
@@ -37,7 +35,6 @@ class Server(SQLModel, table=True):
 
 class Gpu(SQLModel, table=True):
     "Keeps track of the GPU's unique name and the server it is connected to"
-
     id: Optional[int] = Field(primary_key=True, default=None)
     identifier: str = Field()
 
@@ -47,7 +44,6 @@ class Gpu(SQLModel, table=True):
 
 class RunningJob(SQLModel, table=True, table_name="runningjob"):
     "Record of a job that is currently running"
-
     id: Optional[int] = Field(primary_key=True, default=None)
     started_at: Optional[datetime] = Field(default=None)
     completed_at: Optional[datetime] = Field(default=None)
@@ -61,8 +57,7 @@ class RunningJob(SQLModel, table=True, table_name="runningjob"):
 
 
 def initialize():
-    if os.path.exists(config.DB_URL):
-        return
+    if os.path.exists(config.DB_URL): return
 
     SQLModel.metadata.create_all(engine)
 
