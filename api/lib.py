@@ -4,6 +4,7 @@ import docker
 import subprocess
 from datetime import datetime
 from dataclasses import dataclass
+import concurrent.futures
 
 @dataclass(frozen=True)
 class Gpu:
@@ -30,25 +31,37 @@ def get_docker_client(server: str) -> docker.DockerClient:
 
 def get_gpus() -> list[Gpu]:
     gpus = []
-    for server in ['gpu3', 'gpu4', 'gpu5']:
-        result = subprocess.run(
-            f"ssh {server} nvidia-smi --query-gpu=uuid,gpu_name,utilization.gpu,memory.used,memory.total --format=csv,noheader,nounits".split(' '), 
-            stdout = subprocess.PIPE
-        ).stdout.decode('utf-8').splitlines()
-        
-        for i, stat in enumerate(csv.reader(result, delimiter=',')):
-            gpus.append(
-                Gpu(
-                    server=server, 
-                    uuid=stat[0], 
-                    id=f"{i}",
-                    name=stat[1], 
-                    utilization=float(stat[2].strip('%')), 
-                    memory_usage=int(int(stat[3])/int(stat[4])*100),
-                    timestamp=datetime.now()
+    servers = ['gpu3', 'gpu4', 'gpu5']
+    
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        # Submit SSH requests for all servers asynchronously
+        futures = {executor.submit(get_gpu_stats, server): server for server in servers}
+
+        # Wait for all SSH requests to complete and process results
+        for future in concurrent.futures.as_completed(futures):
+            server = futures[future]
+            result = future.result()
+            
+            for i, stat in enumerate(csv.reader(result, delimiter=',')):
+                gpus.append(
+                    Gpu(
+                        server=server, 
+                        uuid=stat[0], 
+                        id=f"{i}",
+                        name=stat[1][1:],
+                        utilization=float(stat[2].strip('%')), 
+                        memory_usage=int(int(stat[3])/int(stat[4])*100),
+                        timestamp=datetime.now()
+                    )
                 )
-            )
     return gpus
+
+
+def get_gpu_stats(server):
+    return subprocess.run(
+        f"ssh {server} nvidia-smi --query-gpu=uuid,gpu_name,utilization.gpu,memory.used,memory.total --format=csv,noheader,nounits".split(' '), 
+        stdout=subprocess.PIPE
+    ).stdout.decode('utf-8').splitlines()
 
 
 def log_system_status(filename: str) -> None:

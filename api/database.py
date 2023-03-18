@@ -37,12 +37,13 @@ class Job(SQLModel, table=True):
     command: str = Field(default=None)
     status: str = Field(default=None)
     trained_at: Optional[str]
+    at_gpus: Optional[str] # 1,2,3
     created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
     started_at: Optional[datetime] = Field(default=None)
     completed_at: Optional[datetime] = Field(default=None)
     required_gpus: int = Field(default=None)
     weight: int = Field(default=None)
-    no_of_migrations: int = Field(default=None)
+    no_of_migrations: int = Field(default=0)
 
 
 class Server(SQLModel, table=True):

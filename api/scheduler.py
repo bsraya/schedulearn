@@ -4,9 +4,8 @@ from lib import get_gpus
 from sqlmodel import Session, select, col
 
 def FIFO(required_gpus: int) -> dict | None:
-    gpus = get_gpus()
-
     for server in ['gpu3', 'gpu4', 'gpu5']:
+        gpus = get_gpus()
         available = [gpu for gpu in gpus if gpu.server == server and gpu.utilization < 90]
         if len(available) >= required_gpus:
             result = {'server': server, 'gpus': []}
