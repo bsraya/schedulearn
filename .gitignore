@@ -1,3 +1,5 @@
 .vscode/
 experimentation/*
-__pycache__/
+__pycache__
+.env
+database.sqlite

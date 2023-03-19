@@ -1,0 +1,9 @@
+{% extends "index.html" %}
+
+{% block content %}
+{% if user %}
+<h1 style="font-size: 3rem;">
+  Welcome {{ user.username }}
+</h1>
+{% endif %}
+{% endblock %}

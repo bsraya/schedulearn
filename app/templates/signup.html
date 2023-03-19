@@ -1,0 +1,43 @@
+{% extends "index.html" %}
+
+{% block content %}
+<h1 style="font-size: 3rem;">Sign Up</h1>
+<form class="box" action="/signup" method="post" style="width: 500px;">
+  <div class="field">
+    <label for="first_name" class="label">First Name</label>
+    <div class="control">
+      <input class="input" type="text" name="first_name" placeholder="e.g. John">
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="last_name" class="label">Last Name</label>
+    <div class="control">
+      <input class="input" type="text" name="last_name" placeholder="e.g. Doe">
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Username</label>
+    <div for="username" class="control">
+      <input class="input" type="text" name="username" placeholder="johndoe">
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="email" class="label">Email</label>
+    <div class="control">
+      <input class="input" type="text" name="email" placeholder="e.g. alex@example.com">
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="password" class="label">Password</label>
+    <div class="control">
+      <input class="input" type="password" name="password" placeholder="********">
+    </div>
+  </div>
+
+  <button class="button is-primary">Sign in</button>
+</form>
+{% endblock %}

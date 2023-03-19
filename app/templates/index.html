@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Sign Up</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+
+<body>
+  <nav>
+    <ul style="display: flex; gap: 10px;">
+      <li><a href="/">Home</a></li>
+      <li><a href="/signup">Sign Up</a></li>
+      <li><a href="/signin">Sign In</a></li>
+      <li><a href="/dashboard">Dashboard</a></li>
+    </ul>
+  </nav>
+  {% block content %}
+  <h1 style="font-size: 3rem;">Welcome</h1>
+  <p>Please login</p>
+  {% endblock %}
+</body>
+
+</html>
