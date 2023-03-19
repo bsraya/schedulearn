@@ -3,6 +3,8 @@ from sqlmodel import SQLModel, create_engine, Session
 from dotenv import dotenv_values
 from .user import User
 
+__all__ = ["User"]
+
 # get DATABASE_URL from .env
 url = dotenv_values(".env").get("DATABASE_URL")
 

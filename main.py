@@ -1,20 +1,6 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from app.api.routers import router as api_router
-from app.api.models import create_db_and_tables
 import uvicorn
-app = FastAPI()
-
-# Add the API router to the application
-app.include_router(api_router)
-
-# Add CORS middleware to the application
-app.add_middleware(
-  CORSMiddleware,
-  allow_origins=["*"],
-  allow_methods=["*"],
-  allow_headers=["*"],
-)
+from app import app
+from app.api.models import create_db_and_tables
 
 @app.on_event("startup")
 async def startup_event():

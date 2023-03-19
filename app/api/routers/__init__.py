@@ -1,8 +1,8 @@
 from fastapi import APIRouter
-from fastapi.responses import HTMLResponse
 from .user import router as user_router
 from .page import router as page_router
 from .auth import router as auth_router
+
 router = APIRouter()
 
 router.include_router(page_router, tags=["page"])
