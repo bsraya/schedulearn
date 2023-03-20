@@ -1,64 +1,55 @@
 import re
-from fastapi import Request
 from dataclasses import dataclass
 from pydantic import BaseModel
+from pydantic.dataclasses import dataclass
 
 # password should be at least 8 characters
 # password should contain at least one number
 # password should contain at least one capital letter
-password_regex = r'^(?=.*[A-Z])(?=.*[0-9])(?=.{8,})'
+PASSWORD_REGEX = r'^(?=.*[A-Z])(?=.*[0-9])(?=.{8,})'
 
 # johndoe@gmail.com
 # johndoe@gapp.nthu.edu.tw
 # johndoe@office365.nthu.edu.tw
-email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+EMAIL_REGEX = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
 
-@dataclass
 class UserLogin(BaseModel):
-    request: Request
     username: str
     password: str
 
-@dataclass
-class UserSignup(UserLogin):
+class UserSignup(BaseModel):
     first_name: str
     last_name: str
     email: str
-
-    async def load_data(self):
-        form = await self.request.form()
-        self.first_name = form.get("first_name")
-        self.last_name = form.get("last_name")
-        self.username = form.get("username")
-        self.email = form.get("email")
-        self.password = form.get("password")
+    username: str
+    password: str
 
     def is_valid_email(self, email):
-        if re.match(email_regex, email):
+        if re.match(EMAIL_REGEX, email):
             return True
         return False
     
     def is_valid_password(self, password):
-        if re.match(password_regex, password):
+        if re.match(PASSWORD_REGEX, password):
             return True
         return False
 
     def is_valid(self):
-        self.errors = []
+        errors = []
         if not self.first_name or not len(self.first_name) > 1:
-            self.errors.append("First name is required")
+            errors.append("First name is required")
         if not self.last_name or not len(self.last_name) > 1:
-            self.errors.append("Last name is required")
+            errors.append("Last name is required")
         if not self.username or not len(self.username) > 1:
-            self.errors.append("Username is required")    
+            errors.append("Username is required")    
         if not self.email: 
-            self.errors.append("Email is required")
+            errors.append("Email is required")
         if not self.is_valid_email(self.email):
-            self.errors.append("Email is invalid")
+            errors.append("Email is invalid")
         if not self.password:
-            self.errors.append("Password is required")
+            errors.append("Password is required")
         if not self.is_valid_password(self.password):
-            self.errors.append("Password is invalid")
-        if self.errors:
-            return False
-        return True
+            errors.append("Password is invalid")
+        if  errors:
+            return False, errors
+        return True, errors

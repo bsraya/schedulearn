@@ -5,5 +5,10 @@
 <h1 style="font-size: 3rem;">
   Welcome {{ user.username }}
 </h1>
+<p>First name: {{ user.first_name }}</p>
+<p>Last name: {{ user.last_name }}</p>
+<p>Email: {{ user.email }}</p>
+<p>Username: {{ user.username }}</p>
+<a href="/auth/signout">Sign out</a>
 {% endif %}
 {% endblock %}
