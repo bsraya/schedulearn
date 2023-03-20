@@ -1,7 +1,25 @@
+import heapq
 import logging
 import database as db
 from lib import get_gpus
 from sqlmodel import Session, select, col
+
+def Optimus(required_gpus: int) -> dict | None:
+    gpus = get_gpus()
+    heap = [(gpu.memory_free, gpu) for gpu in gpus if gpu.utilization < 90]
+    heapq.heapify(heap)
+
+    # check if there are enough GPUs available
+    if len(heap) < required_gpus:
+        return None
+
+    result = {'server': 'gpu3', 'gpus': []}
+    for _ in range(required_gpus):
+        _, gpu = heapq.heappop(heap)
+        result['gpus'].append(gpu.id)
+
+    return result
+
 
 def FIFO(required_gpus: int) -> dict | None:
     for server in ['gpu3', 'gpu4', 'gpu5']:
@@ -13,6 +31,7 @@ def FIFO(required_gpus: int) -> dict | None:
                 result['gpus'].append(gpu.id)
             return result
     return {'server': None, 'gpus': []}
+
 
 def RoundRobin(required_gpus: int) -> dict | None:
     result = {"server": "", "gpus": []}

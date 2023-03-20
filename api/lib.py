@@ -13,11 +13,13 @@ class Gpu:
     id: int
     name: str
     utilization: float
-    memory_usage: int
+    memory_free: int
+    memory_used: int
+    memory_total: int
     timestamp: datetime
 
     def __str__(self):
-        return f"{self.server},{self.uuid},{self.id},{self.name},{self.utilization},{self.memory_usage},{self.timestamp}"
+        return f"{self.server},{self.uuid},{self.id},{self.name},{self.utilization},{self.memory_free},{self.memory_used},{self.memory_total},{self.timestamp}"
 
 
 def get_docker_client(server: str) -> docker.DockerClient:
@@ -50,7 +52,9 @@ def get_gpus() -> list[Gpu]:
                         id=f"{i}",
                         name=stat[1][1:],
                         utilization=float(stat[2].strip('%')), 
-                        memory_usage=int(int(stat[3])/int(stat[4])*100),
+                        memory_free=int(stat[3]),
+                        memory_used=int(stat[4]),
+                        memory_total=int(stat[5]),
                         timestamp=datetime.now()
                     )
                 )
@@ -59,7 +63,7 @@ def get_gpus() -> list[Gpu]:
 
 def get_gpu_stats(server):
     return subprocess.run(
-        f"ssh {server} nvidia-smi --query-gpu=uuid,gpu_name,utilization.gpu,memory.used,memory.total --format=csv,noheader,nounits".split(' '), 
+        f"ssh {server} nvidia-smi --query-gpu=uuid,gpu_name,utilization.gpu,memory.free,memory.used,memory.total --format=csv,noheader,nounits".split(' '), 
         stdout=subprocess.PIPE
     ).stdout.decode('utf-8').splitlines()
 
@@ -75,3 +79,6 @@ def log_system_status(filename: str) -> None:
             f.write(
                 f"{datetime.now()},{','.join([str(gpu.memory_usage) for gpu in gpus])}\n"
             )
+
+if __name__ == "__main__":
+    print(get_gpus())

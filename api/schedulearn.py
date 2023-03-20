@@ -2,7 +2,7 @@ import uuid
 import datetime
 import database as db
 from lib import get_docker_client, get_gpus
-from scheduler import FIFO
+from scheduler import FIFO, Optimus
 from sqlmodel import Session, select, col
 from fastapi import BackgroundTasks
 
@@ -55,6 +55,19 @@ def run_job(new_job_id: int, background_tasks: BackgroundTasks):
             available_resources = {"server": None, "gpus": []}
             while available_resources['server'] is None or len(available_resources['gpus']) < job.required_gpus:
                 found = FIFO(job.required_gpus)
+                if found['server'] and found['gpus']:
+                    available_resources["server"] = found['server']
+                    available_resources["gpus"] = found['gpus']
+                    break
+            job.trained_at = available_resources['server']
+            job.at_gpus = ','.join(available_resources['gpus'])
+            session.commit()
+            session.refresh(job)
+
+        if scheduling_algorithm == "Optimus":
+            available_resources = {"server": None, "gpus": []}
+            while available_resources['server'] is None or len(available_resources['gpus']) < job.required_gpus:
+                found = Optimus(job.required_gpus)
                 if found['server'] and found['gpus']:
                     available_resources["server"] = found['server']
                     available_resources["gpus"] = found['gpus']
