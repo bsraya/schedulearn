@@ -1,5 +1,4 @@
 .vscode/
-experimentation/
 __pycache__/
 .env
 database.*

@@ -102,10 +102,10 @@ async def add_job(job: Job, background_tasks: BackgroundTasks):
 
         session.add(new_job)
         session.commit()
-        logger.info("A training job is added to the database")
+        logger.info(f"A training job with {job.required_gpus} GPUs is added to the database")
         background_tasks.add_task(run_job, new_job.id, background_tasks)
         logger.info("A trainig job is added to the scheduler")
-        return JSONResponse(status_code=201, content={"message": "Job created successfully"})
+        return JSONResponse(status_code=201, content={"message": f"Job with {job.required_gpus} GPUs created successfully"})
 
 @app.put("/algorithm/{algorithm}")
 async def change_algorithm(algorithm: str):
@@ -122,6 +122,11 @@ async def change_algorithm(algorithm: str):
             session.commit()
             logging.info("Algorithm changed to Elastic FIFO")
             return JSONResponse(status_code=200, content={"message": "Algorithm changed to Elastic FIFO"})
+        if algorithm.lower() == "optimus":
+            current_algorithm.value = "Optimus"
+            session.commit()
+            logging.info("Algorithm changed to Optimus")
+            return JSONResponse(status_code=200, content={"message": "Algorithm changed to Optimus"})
         elif algorithm.lower() == "roundrobin":
             current_algorithm.value = "RoundRobin"
             session.commit()

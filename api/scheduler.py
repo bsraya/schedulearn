@@ -5,15 +5,20 @@ from lib import get_gpus
 from sqlmodel import Session, select, col
 
 def Optimus(required_gpus: int) -> dict | None:
+    server = 'gpu3'
     gpus = get_gpus()
-    heap = [(gpu.memory_free, gpu) for gpu in gpus if gpu.utilization < 90]
+
+    if not gpus:
+        return {'server': None, 'gpus': []}
+
+    heap = [(gpu.memory_free, gpu) for gpu in gpus if gpu.utilization < 90 and gpu.server == server]
     heapq.heapify(heap)
 
-    # check if there are enough GPUs available
+    # check if the heap has enough gpus
     if len(heap) < required_gpus:
-        return None
+        return {'server': None, 'gpus': []}
 
-    result = {'server': 'gpu3', 'gpus': []}
+    result = {'server': server, 'gpus': []}
     for _ in range(required_gpus):
         _, gpu = heapq.heappop(heap)
         result['gpus'].append(gpu.id)
