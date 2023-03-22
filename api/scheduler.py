@@ -4,6 +4,35 @@ import database as db
 from lib import get_gpus
 from sqlmodel import Session, select, col
 
+def OASiS(required_gpus: int, strategy: str = "best_fit") -> dict | None:
+    gpus = get_gpus()
+    if not gpus:
+        return {'server': None, 'gpus': []}
+    result = {'server': None, 'gpus': []}
+    
+    if strategy == "best_fit":
+        for server in ['gpu3', 'gpu4', 'gpu5']:
+            result = {'server': None, 'gpus': []}
+            available_gpus = [gpu for gpu in gpus if gpu.server == server and gpu.utilization < 90]
+            if len(available_gpus) > len(result['gpus']):
+                result['server'] = server
+                for gpu in available_gpus[:required_gpus]:
+                    result['gpus'].append(gpu.id)
+        if len(result['gpus']) >= required_gpus:
+            return result
+    elif strategy == "first_fit":
+        for server in ['gpu3', 'gpu4', 'gpu5']:
+            available_gpus = [gpu for gpu in gpus if gpu.server == server and gpu.utilization < 90]
+            if len(available_gpus) >= required_gpus:
+                result['server'] = server
+                for gpu in available_gpus[:required_gpus]:
+                    result['gpus'].append(gpu.id)
+                return result
+    else:
+        raise ValueError("Invalid strategy")
+    
+    return {'server': None, 'gpus': []}
+
 def Optimus(required_gpus: int) -> dict | None:
     server = 'gpu3'
     gpus = get_gpus()

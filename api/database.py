@@ -2,13 +2,14 @@ import config
 from typing import List
 from typing import Optional
 from datetime import datetime
-from sqlmodel import Field, Relationship, SQLModel, Session, create_engine
+from sqlmodel import Field, Relationship, SQLModel, Session, create_engine, select
+
 
 engine = create_engine(config.DB_URL, echo=True)
 
 class Schedulearn(SQLModel, table=True):
-    configuration: Optional[str] = Field(default="FIFO", primary_key=True)
-    value: Optional[str]
+    configuration: Optional[str] = Field(primary_key=True)
+    value: Optional[str] = Field(default=None)
 
 
 class User(SQLModel, table=True):
@@ -67,6 +68,26 @@ class Gpu(SQLModel, table=True):
 
 def initialize():
     SQLModel.metadata.create_all(engine)
+
+    with Session(engine) as session:
+        if session.exec(select(Schedulearn)).first() is None:
+            session.add(Schedulearn(
+                configuration="algorithm",
+                value="ElasticFIFO"
+            ))
+            session.add(
+                Schedulearn(
+                    configuration="last_server",
+                    value="gpu3"
+                )
+            )
+            session.add(
+                Schedulearn(
+                    configuration="next_server",
+                    value="gpu4"
+                )
+            )
+            session.commit()
 
     # Create a server then add gpus to the server
     with Session(engine) as session:

@@ -53,26 +53,6 @@ async def log_system_status_task(filename: str):
 async def on_startup():
     logger.info("API starting up...")
     db.initialize()
-    with Session(db.engine) as session:
-        if session.exec(select(db.Schedulearn)).first() is None:
-            session.add(db.Schedulearn(
-                configuration="algorithm",
-                value="FIFO"
-            ))
-            session.add(
-                db.Schedulearn(
-                    configuration="last_server",
-                    value="gpu3"
-                )
-            )
-            session.add(
-                db.Schedulearn(
-                    configuration="next_server",
-                    value="gpu4"
-                )
-            )
-            session.commit()
-            logger.info("Default configuration added to database")
     logger.info("Database initialized")
 
 

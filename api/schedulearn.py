@@ -2,7 +2,7 @@ import uuid
 import datetime
 import database as db
 from lib import get_docker_client, get_gpus
-from scheduler import FIFO, Optimus
+from scheduler import FIFO, Optimus, OASiS
 from sqlmodel import Session, select, col
 from fastapi import BackgroundTasks
 
@@ -51,33 +51,25 @@ def run_job(new_job_id: int, background_tasks: BackgroundTasks):
             select(db.Job).where(col(db.Job.id) == new_job_id)
         ).one()
     
-        if scheduling_algorithm == "FIFO" or scheduling_algorithm == "ElasticFIFO":
-            available_resources = {"server": None, "gpus": []}
-            while True:
+        
+        available_resources = {"server": None, "gpus": []}
+        while True:
+            if scheduling_algorithm == "FIFO" or scheduling_algorithm == "ElasticFIFO":
                 found = FIFO(job.required_gpus)
-                if found.get("server", None) is not None and len(found.get("gpus", [])) == job.required_gpus:
-                    available_resources["server"] = found['server']
-                    available_resources["gpus"] = found['gpus']
-                    break
-            job.trained_at = available_resources['server']
-            job.at_gpus = ','.join(available_resources['gpus'])
-            session.commit()
-            session.refresh(job)
-        elif scheduling_algorithm == "Optimus":
-            available_resources = {"server": None, "gpus": []}
-            while True:
+            elif scheduling_algorithm == "Optimus":
                 found = Optimus(job.required_gpus)
-                if found.get("server") is not None and len(found.get("gpus", [])) == job.required_gpus:
-                    available_resources["server"] = found['server']
-                    available_resources["gpus"] = found['gpus']
-                    break
-            job.trained_at = available_resources['server']
-            job.at_gpus = ','.join(available_resources['gpus'])
-            session.commit()
-            session.refresh(job)
-            print("Assigned to: ", job.trained_at, job.at_gpus)
-        else:
-            raise Exception("Invalid scheduling algorithm")
+            elif scheduling_algorithm == "OASiS":
+                found = OASiS(required_gpus = job.required_gpus)
+            else:
+                raise Exception("Invalid scheduling algorithm")
+            if found.get("server", None) is not None and len(found.get("gpus", [])) == job.required_gpus:
+                available_resources["server"] = found['server']
+                available_resources["gpus"] = found['gpus']
+                break
+        job.trained_at = available_resources['server']
+        job.at_gpus = ','.join(available_resources['gpus'])
+        session.commit()
+        session.refresh(job)
 
         job.container_name = f"{job.name.lower().replace(' ', '-')}-{uuid.uuid4()}"
         docker_client = get_docker_client(job.trained_at)
