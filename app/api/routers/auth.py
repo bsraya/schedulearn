@@ -38,45 +38,10 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(seconds=expires)
+        expire = datetime.utcnow() + timedelta(minutes=expires)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, dotenv_values(".env").get("SECRET_KEY"), algorithm=dotenv_values(".env").get("JWT_ALGORITHM"))
     return encoded_jwt
-    """Dashboard page"""
-    cookie_authorization: str = request.cookies.get('Authorization')
-    
-    if not cookie_authorization:
-        response = RedirectResponse(url="/signin")
-        response.delete_cookie("Auhorization")
-        return response
-    
-    cookie_scheme, cookie_param = get_authorization_scheme_param(cookie_authorization)
-
-    if cookie_scheme.lower() == "bearer":
-        authorization = True
-        scheme = cookie_scheme
-        param = cookie_param
-    else:
-        authorization = False
-
-    if not authorization or scheme.lower() != "bearer":
-        raise HTTPException(
-            status_code=HTTP_403_FORBIDDEN,
-            detail="Not authenticated"
-        )
-    
-    try:
-        payload = jwt.decode(param, SECRET_KEY, algorithms=[JWT_ALGORITHM])
-    except JWTError:
-        return "User Not found."
-    
-    username = payload.get("sub")
-
-    with Session(schema.engine) as session:
-        user = session.exec(
-            select(schema.User).where(schema.User.username == username)
-        ).first()
-        return templates.TemplateResponse("dashboard.html", {"request": request, "user": user})
 
 
 @router.post("/signin")
@@ -95,7 +60,7 @@ async def signin(request: Request):
         )
         
     session_token = create_access_token(
-        data={"sub": user.username}, expires_delta=timedelta(seconds=expires)
+        data={"sub": user.username}, expires_delta=timedelta(minutes=expires)
     )
 
     response = RedirectResponse(
@@ -108,8 +73,8 @@ async def signin(request: Request):
         f"Bearer {session_token}",
         domain="localhost",
         httponly=True,
-        max_age=expires,
-        expires=expires,
+        max_age=3600,
+        expires=3600,
     )
 
     return response
@@ -135,11 +100,11 @@ async def signup(request: Request):
             )
         
         validate_user = UserSignup(
-        first_name = form["first_name"],
-        last_name = form["last_name"],
-        username = form["username"],
-        email = form["email"],
-        password = form["password"]
+            first_name = form["first_name"],
+            last_name = form["last_name"],
+            username = form["username"],
+            email = form["email"],
+            password = form["password"]
         )
 
         valid_user, errors = validate_user.is_valid()
@@ -148,17 +113,17 @@ async def signup(request: Request):
             return JSONResponse(
                 status_code=400,
                 content={
-                "status_code": 400,
-                "message": f"Invalid user information. Errors are {errors}",
+                    "status_code": 400,
+                    "message": f"Invalid user information. Errors are {errors}",
                 }
             )
 
         new_user = User(
-        first_name=form["first_name"],
-        last_name=form["last_name"],
-        username=form["username"],
-        email=form["email"],
-        hashed_password=pwd_context.hash(form["password"]),
+            first_name=form["first_name"],
+            last_name=form["last_name"],
+            username=form["username"],
+            email=form["email"],
+            hashed_password=pwd_context.hash(form["password"]),
         )
 
         session.add(new_user)
@@ -166,8 +131,8 @@ async def signup(request: Request):
         session.refresh(new_user)
 
         response = RedirectResponse(
-        url="/signin",
-        status_code=303
+            url="/signin",
+            status_code=303
         )
 
         return response
