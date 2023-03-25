@@ -5,8 +5,7 @@ from .user import User
 
 __all__ = ["User"]
 
-# get DATABASE_URL from .env
-url = dotenv_values(".env").get("DATABASE_URL")
+url = dotenv_values(".env").get("DB_URL")
 
 engine = create_engine(url, echo=True)
 
