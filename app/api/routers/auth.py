@@ -1,15 +1,14 @@
-from fastapi import APIRouter
-from fastapi.responses import RedirectResponse, JSONResponse
-from fastapi.security import OAuth2PasswordBearer
-from fastapi import Request
-from app.api.models import engine
-from app.api.schemas.user import UserSignup
-from sqlmodel import select, Session
-from app.api.models.user import User
-from app.api.shared import pwd_context
-from datetime import datetime, timedelta
 from jose import jwt
 from dotenv import dotenv_values
+from sqlmodel import select, Session
+from datetime import datetime, timedelta
+from app.api.models import engine
+from app.api.models.user import User
+from app.api.shared import pwd_context
+from app.api.schemas.user import UserSignup
+from fastapi import APIRouter, Request
+from fastapi.security import OAuth2PasswordBearer
+from fastapi.responses import RedirectResponse, JSONResponse
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -80,7 +79,6 @@ async def signin(request: Request):
     return response
 
 
-# create user login endpoint
 @router.post("/signup", status_code=201)
 async def signup(request: Request):
     form: dict = await request.form()
