@@ -2,10 +2,11 @@
 from sqlmodel import SQLModel, create_engine, Session
 from dotenv import dotenv_values
 from .user import User
+from .job import Job
 
-__all__ = ["User"]
+__all__ = ["User", "Job"]
 
-url = dotenv_values(".env").get("DB_URL")
+url = dotenv_values(".env").get("DATABASE_URL")
 
 engine = create_engine(url, echo=True)
 
