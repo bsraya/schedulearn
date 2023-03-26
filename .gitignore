@@ -3,3 +3,5 @@ experimentation/*
 __pycache__
 .env
 database.sqlite
+scripts/*
+test.py
