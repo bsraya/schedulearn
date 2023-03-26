@@ -1,3 +1,6 @@
-from .lib import *
+# import everything inside the `utils` folder located in this folder
+from .utils import *
 
-__all__ = ['lib']
+_all_ = [
+    "utils",
+]
