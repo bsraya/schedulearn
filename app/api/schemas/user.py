@@ -17,7 +17,7 @@ class UserLogin(BaseModel):
     username: str
     password: str
 
-class UserSignup(BaseModel):
+class SignupForm(BaseModel):
     first_name: str
     last_name: str
     email: str
