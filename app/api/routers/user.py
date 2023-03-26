@@ -2,7 +2,7 @@ from fastapi import APIRouter
 
 router = APIRouter()
 
-@router.get("/")
+@router.get("/create")
 async def get_user():
   return {"message": "This is the user api"}
 

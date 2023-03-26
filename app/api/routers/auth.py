@@ -1,46 +1,17 @@
-from jose import jwt
 from dotenv import dotenv_values
 from sqlmodel import select, Session
 from datetime import datetime, timedelta
 from app.api.models import engine
 from app.api.models.user import User
-from app.api.shared import pwd_context
-from app.api.schemas.user import UserSignup
-from fastapi import APIRouter, Request
+from app.api.schemas.user import SignupForm
+from app.api.shared.utils.security import get_authorized_user
+from fastapi import APIRouter, Request, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.responses import RedirectResponse, JSONResponse
+from app.api.shared.utils.security import pwd_context, authenticate_user, create_access_token
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
-
-def get_user(username: str):
-    with Session(engine) as session:
-        user = session.exec(
-            select(User).where(User.username == username)
-        ).first()
-        return user
-
-
-def authenticate_user(username: str, password: str):
-    user = get_user(username)
-    if not user:
-        return False
-    if not pwd_context.verify(password, user.hashed_password):
-        return False
-    return user
-
-
-def create_access_token(data: dict, expires_delta: timedelta | None = None):
-    to_encode = data.copy()
-    expires = int(dotenv_values(".env").get("EXPIRE"))
-    if expires_delta:
-        expire = datetime.utcnow() + expires_delta
-    else:
-        expire = datetime.utcnow() + timedelta(minutes=expires)
-    to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, dotenv_values(".env").get("SECRET_KEY"), algorithm=dotenv_values(".env").get("JWT_ALGORITHM"))
-    return encoded_jwt
 
 
 @router.post("/signin")
@@ -59,7 +30,11 @@ async def signin(request: Request):
         )
         
     session_token = create_access_token(
-        data={"sub": user.username}, expires_delta=timedelta(minutes=expires)
+        data = {
+            "sub": user.username,
+            "admin": user.admin
+        }, 
+        expires_delta = timedelta(minutes=expires)
     )
 
     response = RedirectResponse(
@@ -82,8 +57,13 @@ async def signin(request: Request):
 @router.post("/signup", status_code=201)
 async def signup(request: Request):
     form: dict = await request.form()
+    payload = get_authorized_user(request)
     
     with Session(engine) as session:
+        current_user = session.exec(
+            select(User).where(User.username == payload.get("sub"))
+        ).first()
+
         db_user = session.exec(
             select(User).where(User.email == form["email"])
         ).first()
@@ -97,7 +77,7 @@ async def signup(request: Request):
                 },
             )
         
-        validate_user = UserSignup(
+        validate_form = SignupForm(
             first_name = form["first_name"],
             last_name = form["last_name"],
             username = form["username"],
@@ -105,15 +85,12 @@ async def signup(request: Request):
             password = form["password"]
         )
 
-        valid_user, errors = validate_user.is_valid()
+        valid_user, errors = validate_form.is_valid()
 
         if not valid_user:
-            return JSONResponse(
+            return HTTPException(
                 status_code=400,
-                content={
-                    "status_code": 400,
-                    "message": f"Invalid user information. Errors are {errors}",
-                }
+                detail=errors
             )
 
         new_user = User(
@@ -122,23 +99,30 @@ async def signup(request: Request):
             username=form["username"],
             email=form["email"],
             hashed_password=pwd_context.hash(form["password"]),
+            admin=False,
+            created_at=datetime.now(),
+            updated_at=datetime.now()
         )
 
         session.add(new_user)
         session.commit()
         session.refresh(new_user)
 
-        response = RedirectResponse(
-            url="/signin",
-            status_code=303
-        )
-
-        return response
+        if current_user.admin:
+            return RedirectResponse(
+                url="/settings/users",
+                status_code=303
+            )
+        else:
+            return RedirectResponse(
+                url="/signin",
+                status_code=303
+            )
     
 
 @router.get("/signout")
 async def signout():
     """Logout user"""
-    response = RedirectResponse(url="/signin")
+    response = RedirectResponse(url="/")
     response.delete_cookie("Authorization")
     return response
