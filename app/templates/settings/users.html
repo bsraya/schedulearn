@@ -1,0 +1,35 @@
+{% extends "index.html" %}
+
+{% block content %}
+<span>
+    <a href="/settings">Settings</a> /
+    <a href="/settings/jobs">Jobs</a> /
+    <a href="/settings/users">Users</a>
+</span>
+<a href="/user/create">Create User</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Created at</th>
+            <th>Role</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.first_name }} {{ user.last_name }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.created_at }}</td>
+            {% if user.admin %}
+            <td>Admin, User</td>
+            {% else %}
+            <td>User</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+    {% endblock %}

@@ -1,54 +1,78 @@
 {% extends "index.html" %}
 
 {% block content %}
-<a href="/auth/signout">Sign out</a>
-
 {% if user %}
 <h1 style="font-size: 3rem;">
   Welcome {{ user.username }}
 </h1>
 
-<form class="box" action="/job/add" method="post" style="width: 1000px;" enctype="multipart/form-data">
-  <div class="field" style="margin-bottom: 20px;">
-    <label class=" label">Job Name</label>
-    <div for="job_name" class="control">
-      <input class="input" type="text" name="job_name" placeholder="PyTorch Job 1" style="width: 500px;">
-    </div>
-  </div>
-  <div class="field">
-    <label class="label">Job Type</label>
-    <div class="control" style="margin-bottom: 20px;">
-      <label class="radio">
-        <input type="radio" name="job_type" value="PyTorch">
-        PyTorch
-      </label>
-      <label class="radio">
-        <input type="radio" name="job_type" value="PyTorch Lightning">
-        PyTorch Lightning
-      </label>
-      <label class="radio">
-        <input type="radio" name="job_type" value="TensorFlow">
-        TensorFlow
-      </label>
-      <label class="radio">
-        <input type="radio" name="job_type" value="Apache MXNet">
-        Apache MXNet
-      </label>
-      <label class="radio">
-        <input type="radio" name="job_type" value="Keras">
-        Keras
-      </label>
-    </div>
+<div style="margin-left: 50px;">
+  <form class="box" action="/job/add" method="post" enctype="multipart/form-data">
     <div class="field" style="margin-bottom: 20px;">
-      <label class="label">Upload File</label>
-      <div class="control">
-        <input class="input" type="file" name="file" placeholder="Upload File" style="width: 500px;">
+      <label class="label">Job Name</label>
+      <div for="job_name" class="control">
+        <input class="input" type="text" name="job_name" placeholder="PyTorch Job 1" style="width: 600px;">
       </div>
     </div>
-    <button class="button is-primary" style="margin-top:10px;">Submit</button>
-</form>
+    <div class="field">
+      <label class="label">Job Type</label>
+      <div class="control" style="margin-bottom: 20px;">
+        <label class="radio">
+          <input type="radio" name="job_type" value="PyTorch">
+          PyTorch
+        </label>
+        <label class="radio">
+          <input type="radio" name="job_type" value="PyTorch Lightning">
+          PyTorch Lightning
+        </label>
+        <label class="radio">
+          <input type="radio" name="job_type" value="TensorFlow">
+          TensorFlow
+        </label>
+        <label class="radio">
+          <input type="radio" name="job_type" value="Apache MXNet">
+          Apache MXNet
+        </label>
+        <label class="radio">
+          <input type="radio" name="job_type" value="Keras">
+          Keras
+        </label>
+      </div>
+      <div class="field" style="margin-bottom: 20px;">
+        <label class="label">Upload File</label>
+        <div class="control">
+          <input class="input" type="file" name="file" placeholder="Upload File" style="width: 600px;">
+        </div>
+      </div>
+      <button class="button is-primary" style="margin-top:10px;">Submit</button>
+  </form>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 50px;">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>File Location</th>
+        <th>Created at</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for job in jobs %}
+      <tr>
+        <td>{{ job.name }}</td>
+        <td>{{ job.type }}</td>
+        <td>{{ job.script }}</td>
+        <td>{{ job.created_at }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% else %}
-<h1>Unauthorized</h1>
-<a href="/signin">Sign in</a>
+<h1 style="font-size: 3rem;">
+  You are not authorized. Please sign in.
+  <a href="/signin">Sign in</a>
+</h1>
 {% endif %}
 {% endblock %}

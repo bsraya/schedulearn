@@ -11,19 +11,29 @@
   {% endblock %}
 </head>
 
+<!-- make body sits right in the middle of the screen -->
+
 <body>
   <nav>
     <ul style="display: flex; gap: 10px;">
       <li><a class="links" href="/">Home</a></li>
+      {% if not user %}
       <li><a class="links" href="/signup">Sign Up</a></li>
       <li><a class="links" href="/signin">Sign In</a></li>
+      {% endif %}
+      {% if user %}
       <li><a class="links" href="/dashboard">Dashboard</a></li>
+      <li><a class="links" href="/settings">Settings</a></li>
+      <li><a class="links" href="/auth/signout">Sign Out</a></li>
+      {% endif %}
     </ul>
   </nav>
-  {% block content %}
-  <h1 style="font-size: 3rem;">Schedulearn</h1>
-  <p>Schedulearn is a platform that makes scheduling deep learning models easy.</p>
-  {% endblock %}
+  <main style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 100px;">
+    {% block content %}
+    <h1 style="font-size: 3rem;">Schedulearn</h1>
+    <p>Schedulearn is a platform that makes scheduling deep learning models easy.</p>
+    {% endblock %}
+  </main>
   <script src="{{ url_for('static', path='/js/index.js') }}"></script>
 </body>
 

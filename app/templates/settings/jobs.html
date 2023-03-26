@@ -1,0 +1,31 @@
+{% extends "index.html" %}
+
+{% block content %}
+<span>
+    <a href="/settings">Settings</a> /
+    <a href="/settings/jobs">Jobs</a> /
+    <a href="/settings/users">Users</a>
+</span>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>File Location</th>
+            <th>Created at</th>
+            <th>Created by</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for job in jobs %}
+        <tr>
+            <td>{{ job.name }}</td>
+            <td>{{ job.type }}</td>
+            <td>{{ job.script }}</td>
+            <td>{{ job.created_at }}</td>
+            <td>{{ job.user_id }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
