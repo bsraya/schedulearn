@@ -35,21 +35,27 @@ class SignupForm(BaseModel):
         return False
 
     def is_valid(self):
-        errors = []
+        errors = {
+            "first_name": [],
+            "last_name": [],
+            "email": [],
+            "username": [],
+            "password": []
+        }
         if not self.first_name or not len(self.first_name) > 1:
-            errors.append("First name is required")
+            errors["first_name"].append("First name is required")
         if not self.last_name or not len(self.last_name) > 1:
-            errors.append("Last name is required")
+            errors["last_name"].append("Last name is required")
         if not self.username or not len(self.username) > 1:
-            errors.append("Username is required")    
+            errors["username"].append("Username is required")    
         if not self.email: 
-            errors.append("Email is required")
+            errors["email"].append("Email is required")
         if not self.is_valid_email(self.email):
-            errors.append("Email is invalid")
+            errors["email"].append("Email is invalid")
         if not self.password:
-            errors.append("Password is required")
+            errors["password"].append("Password is required")
         if not self.is_valid_password(self.password):
-            errors.append("Password is invalid")
-        if  errors:
+            errors["password"].append("Password is invalid")
+        if errors["first_name"] or errors["last_name"] or errors["email"] or errors["username"] or errors["password"]:
             return False, errors
         return True, errors
