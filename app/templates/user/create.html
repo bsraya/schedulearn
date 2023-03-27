@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1 style="font-size: 3rem;">Create A New User</h1>
-<form class="box" action="/auth/signup" method="POST">
+<form class="box" action="/admin/create_user" method="POST">
   <div class="field">
     <label for="first_name">First Name</label>
     <div for="first_name" class="control">
@@ -13,6 +13,20 @@
     <label for="last_name">Last Name</label>
     <div for="last_name" class="control">
       <input class="input" type="text" name="last_name" id="last_name">
+    </div>
+  </div>
+  <div class="field">
+    <label for="role">Role</label>
+    <!-- radio -->
+    <div for="role" class="control" style="margin-top: 5px;">
+      <label class=" radio">
+        <input type="radio" name="role" value="admin">
+        Admin
+      </label>
+      <label class="radio">
+        <input type="radio" name="role" value="user">
+        User
+      </label>
     </div>
   </div>
   <div class="field">
@@ -33,6 +47,6 @@
       <input class="input" type="password" name="password" id="password">
     </div>
   </div>
-  <button type="submit">Update</button>
+  <button type="submit">Submit</button>
 </form>
 {% endblock %}

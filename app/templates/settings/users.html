@@ -6,15 +6,17 @@
     <a href="/settings/jobs">Jobs</a> /
     <a href="/settings/users">Users</a>
 </span>
-<a href="/user/create">Create User</a>
+<button class="button is-primary" style="margin: 20px 0 20px 0;">
+    <a href="/user/create" style="color: white;"><i class="fas fa-plus"></i> Create User</a>
+</button>
 <table class="table">
     <thead>
         <tr>
             <th>Name</th>
             <th>Username</th>
             <th>Email</th>
-            <th>Created at</th>
             <th>Role</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -23,12 +25,16 @@
             <td>{{ user.first_name }} {{ user.last_name }}</td>
             <td>{{ user.username }}</td>
             <td>{{ user.email }}</td>
-            <td>{{ user.created_at }}</td>
             {% if user.admin %}
-            <td>Admin, User</td>
+            <td>Admin</td>
             {% else %}
             <td>User</td>
             {% endif %}
+            <td style="display: flex; justify-content: space-between;">
+                <a href="/user/{{ user.id }}"><i class="fas fa-eye"></i></a>
+                <a href="/user/{{ user.id }}/edit"><i class="fas fa-edit"></i></a>
+                <a href="/user/{{ user.id }}/delete"><i class="fas fa-trash"></i></a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>
