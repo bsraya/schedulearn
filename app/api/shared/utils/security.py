@@ -7,7 +7,7 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from fastapi import HTTPException
 from fastapi.requests import Request
-from fastapi.responses import RedirectResponse
+from fastapi.responses import JSONResponse
 from starlette.status import HTTP_403_FORBIDDEN
 from fastapi.security.utils import get_authorization_scheme_param
 
@@ -17,6 +17,7 @@ pwd_context = CryptContext(
     ldap_salted_md5__salt_size=16,
     deprecated="auto"
 )
+
 
 def get_authorized_user(request: Request) -> dict | None:
     cookie_authorization: str = request.cookies.get('Authorization')
@@ -42,15 +43,23 @@ def get_authorized_user(request: Request) -> dict | None:
     return jwt.decode(param, dotenv_values(".env").get("SECRET_KEY"), algorithms=[dotenv_values(".env").get("JWT_ALGORITHM")])
 
 
-def authenticate_user(username: str, password: str):
+def authenticate_user(username: str, password: str) -> User | bool:
     with Session(engine) as session:
         user = session.exec(
-            select(User).where(User.username == username)
+            select(User)
+            .where(
+                User.username == username
+            )
         ).first()
-        if not user:
-            return False
-        if not pwd_context.verify(password, user.hashed_password):
-            return False
+
+        if not user or not pwd_context.verify(password, user.hashed_password):
+            return JSONResponse(
+                status_code=400,
+                content={
+                    "status_code": 400,
+                    "message": "Incorrect username or password",
+                },
+            )
         
         return user
 
@@ -79,9 +88,13 @@ def authorize_user(request: Request):
             status_code=HTTP_403_FORBIDDEN,
             detail="Not authenticated"
         )
-    
+
     try:
-        payload = jwt.decode(param, dotenv_values(".env").get("SECRET_KEY"), algorithms=[dotenv_values(".env").get("JWT_ALGORITHM")])
+        payload = jwt.decode(
+            param, 
+            dotenv_values(".env").get("SECRET_KEY"), 
+            algorithms=[dotenv_values(".env").get("JWT_ALGORITHM")]
+        )
     except JWTError:
         raise HTTPException(
             status_code=HTTP_403_FORBIDDEN,

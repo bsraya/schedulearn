@@ -3,6 +3,7 @@ from datetime import datetime
 from sqlmodel import select, Session
 from fastapi.responses import RedirectResponse
 from fastapi import APIRouter, Request, File, UploadFile
+from fastapi import Depends, HTTPException
 from app.api.models import engine
 from app.api.models.job import Job
 from app.api.models.user import User
@@ -11,30 +12,16 @@ from app.api.shared.utils.security import authorize_user
 router = APIRouter()
 
 
-@router.post("/delete")
-async def delete_job(request: Request):
-    payload = authorize_user(request)
-
-    if not payload:
-        return RedirectResponse(url="/signin")
-    
+@router.post("/delete/{job_id}")
+async def delete_job(request: Request, job_id: int = None, user: dict = Depends(authorize_user)):
     pass
 
 
 @router.post("/add")
-async def add_job(request: Request, file: UploadFile = File(...)):
-    payload = authorize_user(request)
-
-    if not payload:
-        return RedirectResponse(url="/signin")
-
+async def add_job(request: Request, file: UploadFile = File(...), user: dict = Depends(authorize_user)):
     form: dict = await request.form()
 
     with Session(engine) as session:
-        user = session.exec(
-            select(User).where(User.username == payload.get("sub"))
-        ).first()
-
         # read the file
         with BytesIO() as file_object:
             file_object.write(file.file.read())
@@ -51,7 +38,7 @@ async def add_job(request: Request, file: UploadFile = File(...)):
             name=form["job_name"],
             type=form["job_type"],
             script=f"scripts/{form['file'].filename}",
-            user_id=user.id,
+            user_id=user.get("id"),
             created_at=datetime.now(),
             updated_at=datetime.now()
         )
