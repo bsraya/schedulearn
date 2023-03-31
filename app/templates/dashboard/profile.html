@@ -1,0 +1,115 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div>
+    {% include "components/navbar.html" %}
+    <div class="columns block row">
+        <div class="column auto card box" style="padding: 2rem;">
+            <div class="centered">
+                <figure class="image is-128x128 block">
+                    <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png">
+                </figure>
+                <p class="title">{{ user.first_name }} {{ user.last_name }}</p>
+                <p class="subtitle block">{{ user.username }}</p>
+            </div>
+        </div>
+        <div class="column is-0"></div>
+        <div class="column auto box card" style="padding: 2rem;">
+            <div class="block" style="display: flex; align-items: center;">
+                <i class="fas fa-pen-to-square" style="margin-right: 10px;"></i>
+                <h1 class="card-title">Edit Profile</h1>
+            </div>
+            <form>
+                <div class="field">
+                    <label for="first_name">First Name</label>
+                    <div for="first_name" class="control">
+                        <input class="input" type="text" name="first_name" id="first_name" value="{{ user.first_name }}">
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="last_name">Last Name</label>
+                    <div for="last_name" class="control">
+                        <input class="input" type="text" name="last_name" id="last_name" value="{{ user.last_name }}">
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="username">Username</label>
+                    <div for="username" class="control">
+                        <input class="input" type="text" name="username" id="username" value="{{ user.username }}">
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="email">Email</label>
+                    <div for="email" class="control">
+                        <input class="input" type="text" name="email" id="email" value="{{ user.email }}">
+                    </div>
+                </div>
+                <button class="button is-primary">Edit</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="columns block row">
+        <div class="column box card auto" style="padding: 2rem;">
+            <div class="centered">
+                <p class="subtitle">Email</p>
+                <p><i class="fas fa-envelope" style="margin-right: 0.5rem;"></i> {{ user.email }}</p>
+            </div>
+        </div>
+        <div class="column is-0"></div>
+        <div class="column box card auto" style="padding: 2rem;">
+            <div class="block" style="display: flex; align-items: center;">
+                <i class="fas fa-lock" style="margin-right: 10px;"></i>
+                <h1 class="card-title">
+                    Change Password
+                </h1>
+            </div>
+            <form>
+                <div class="field">
+                    <label for="current_password">Current Password</label>
+                    <div for="current_password" class="control">
+                        <input class="input" type="password" name="current_password" id="current_password">
+                    </div>
+                </div>
+                <hr />
+                <div class="field">
+                    <label for="password">Password</label>
+                    <div for="password" class="control">
+                        <input class="input" type="password" name="password" id="password" value="{{ user.password }}">
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="confirm_password">Confirm Password</label>
+                    <div for="confirm_password" class="control">
+                        <input class="input" type="password" name="confirm_password" id="confirm_password"
+                            value="{{ user.password }}">
+                    </div>
+                </div>
+                <button class="button is-primary">Change</button>
+            </form>
+        </div>
+    </div>
+</div>
+<style>
+    .centered {
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+    }
+
+    .has-border {
+        border-radius: 10px;
+        border: 3px solid #ccc;
+    }
+
+    .row:not(:last-child) {
+        margin-bottom: 3rem;
+    }
+</style>
+{% endblock %}

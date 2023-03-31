@@ -1,0 +1,59 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div>
+  {% include "components/navbar.html" %}
+  <div class="columns">
+  <div class="column block row is-7">
+    <h1 style="font-size: 2rem;">Create A New User</h1>
+    <form method="POST" class="box" action="/admin/create_user">
+      <div class="field">
+        <label for="first_name" style="display: inline-block; width: 100px; vertical-align: middle;">First Name</label>
+        <div for="first_name" class="control" style="display: inline-block; margin-left: 10px; vertical-align: middle;">
+          <input class="input" type="text" name="first_name" id="first_name" placeholder="First Name">
+        </div>
+        
+      </div>
+      <div class="field">
+        <label for="last_name" style="display: inline-block; width: 100px; vertical-align: middle;">Last Name</label>
+        <div for="last_name" class="control" style="display: inline-block; margin-left: 10px; vertical-align: middle;">
+          <input class="input" type="text" name="last_name" id="last_name" placeholder="Last Name">
+        </div>
+      </div>
+      <div class="field">
+        <label for="role" style="display: inline-block; width: 100px; line-height: 1.5; vertical-align: middle;">Role</label>
+        <div for="role" class="control" style="display: inline-block; margin-left: 10px; vertical-align: middle;">
+          <label class="radio" style="display: inline-block; margin-right: 10px;">
+            <input type="radio" name="role" value="admin">
+            Admin
+          </label>
+          <label class="radio" style="display: inline-block;">
+            <input type="radio" name="role" value="user">
+            User
+          </label>
+        </div>
+      </div>
+      <div class="field">
+        <label for="username" style="display: inline-block; width: 100px; vertical-align: middle;">Username</label>
+        <div for="username" class="control" style="display: inline-block; margin-left: 10px; vertical-align: middle;">
+          <input class="input" type="text" name="username" id="username">
+        </div>
+      </div>
+      <div class="field">
+        <label for="email" style="display: inline-block; width: 100px; vertical-align: middle;">Email</label>
+        <div for="email" class="control" style="display: inline-block; margin-left: 10px; vertical-align: middle;">
+          <input class="input" type="text" name="email" id="email">
+        </div>
+      </div>
+      <div class="field">
+        <label for="password" style="display: inline-block; width: 100px; vertical-align: middle;">Password</label>
+        <div for="password" class="control" style="display: inline-block; margin-left: 10px; vertical-align: middle;">
+          <input class="input" type="password" name="password" id="password">
+        </div>
+      </div>
+      <button class="button is-primary" type="submit">Create</button>
+    </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

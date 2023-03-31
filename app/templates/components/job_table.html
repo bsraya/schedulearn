@@ -1,0 +1,38 @@
+{% block content %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Created at</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for job in user_jobs %}
+    <tr class="no-border">
+      <td>{{ job.name }}</td>
+      <td>{{ job.type }}</td>
+      <td>{{ job.created_at | format_date(format="short") }}</td>
+      <td>Running</td>
+      <td>
+        <a href="/job/{{ job.id }}/view" class="button is-light">View</a>
+        <a href="/job/{{ job.id }}/delete" class="button is-danger">Delete</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
+<style>
+  .table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+  }
+
+  .no-border {
+    border-style: hidden;
+  }
+</style>

@@ -1,0 +1,41 @@
+{% block content %}
+<form class="box" action="/job/add" method="post" enctype="multipart/form-data">
+  <div class="field">
+    <label class="label">Job Name</label>
+    <div for="job_name" class="control">
+      <input class="input" type="text" name="job_name" placeholder="PyTorch Job 1" style="width: 600px;">
+    </div>
+  </div>
+  <div class="field">
+    <label class="label">Job Type</label>
+    <div class="control" style="margin-bottom: 20px;">
+      <label class="radio">
+        <input type="radio" name="job_type" value="PyTorch">
+        PyTorch
+      </label>
+      <label class="radio">
+        <input type="radio" name="job_type" value="PyTorch Lightning">
+        PyTorch Lightning
+      </label>
+      <label class="radio">
+        <input type="radio" name="job_type" value="TensorFlow">
+        TensorFlow
+      </label>
+      <label class="radio">
+        <input type="radio" name="job_type" value="Apache MXNet">
+        Apache MXNet
+      </label>
+      <label class="radio">
+        <input type="radio" name="job_type" value="Keras">
+        Keras
+      </label>
+    </div>
+    <div class="field" style="margin-bottom: 20px;">
+      <label class="label">Upload File</label>
+      <div class="control">
+        <input class="input" type="file" name="file" placeholder="Upload File" style="width: 600px;">
+      </div>
+    </div>
+    <button class="button is-primary" style="margin-top:10px;">Submit</button>
+</form>
+{% endblock %}
