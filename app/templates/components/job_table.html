@@ -1,29 +1,36 @@
 {% block content %}
-<table class="table">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Type</th>
-      <th>Created at</th>
-      <th>Status</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for job in user_jobs %}
-    <tr class="no-border">
-      <td>{{ job.name }}</td>
-      <td>{{ job.type }}</td>
-      <td>{{ job.created_at | format_date(format="short") }}</td>
-      <td>Running</td>
-      <td>
-        <a href="/jobs/{{ job.id }}" class="button is-light">View</a>
-        <a href="/jobs/{{ job.id }}" class="button is-danger">Delete</a>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div class="table-container">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Created at</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for job in user_jobs %}
+      <tr class="no-border">
+        <td>{{ job.name }}</td>
+        <td>{{ job.type }}</td>
+        <td>{{ job.created_at | format_date(format="short") }}</td>
+        <td>
+          <div class="tag is-primary" style="width: 75px;">Running</div>
+          <div class="tag is-success" style="width: 75px;">Success</div>
+          <div class="tag is-danger" style="width: 75px;">Failed</div>
+          <div class="tag is-warning" style="width: 75px;">Pending</div>
+        </td>
+        <td>
+          <a href="/jobs/{{ job.id }}" class="button is-light" style="width: 100px; margin-right: 10px;">View</a>
+          <a href="/jobs/{{ job.id }}" class="button is-danger" style="width: 100px;">Delete</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endblock %}
 <style>
   .table {
