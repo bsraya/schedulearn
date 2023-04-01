@@ -60,7 +60,13 @@ async def get_user(prefix: str, request: Request, user: dict = Depends(authorize
 @router.get("/jobs/{prefix:path}", response_class=HTMLResponse)
 async def get_jobs(prefix: str, request: Request, user: dict = Depends(authorize_user)):
     if prefix == "create":
-        return templates.TemplateResponse("jobs/create.html", {"request": request, "user": user})
+        with Session(engine) as session:
+            if user.get("admin"):
+                jobs = session.exec(select(Job)).all()
+            else:
+                jobs = session.exec(select(Job).where(Job.user_id == user.id)).all()
+
+            return templates.TemplateResponse("jobs/create.html", {"request": request, "user": user, "jobs": jobs})
     elif prefix.isnumeric():
         with Session(engine) as session:
             job = session.exec(
