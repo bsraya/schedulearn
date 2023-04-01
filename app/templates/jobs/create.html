@@ -2,4 +2,72 @@
 
 {% block content %}
 {% include "components/navbar.html" %}
+<div class="columns block is-multiline">
+    <div class="card box column is-one-third-fullhd is-one-third-widescreen is-full-desktop is-full-tablet is-full-mobile"
+        style="height: 365px; padding: 2rem; margin-right: 2rem;">
+        <div class="block" style="display: flex; align-items: center;">
+            <i class="fas fa-pen-to-square fa-xl" style="margin-right: 10px;"></i>
+            <h1 class="title is-4">Create Job</h1>
+        </div>
+        <form>
+            <!-- job form consists of job name (text), job type (radio), and upload field  -->
+            <div class="field">
+                <label for="job_name">Job Name</label>
+                <div for="job_name" class="control">
+                    <input class="input" type="text" name="job_name" id="job_name">
+                </div>
+            </div>
+            <div class="field">
+                <label for="job_type">Job Type</label>
+                <div for="job_type" class="control">
+                    <label class="radio">
+                        <input type="radio" name="job_type" value="Apache MXNet">
+                        Apache MXNet
+                    </label>
+                    <label class="radio">
+                        <input type="radio" name="job_type" value="Keras">
+                        Keras
+                    </label>
+                    <label class="radio">
+                        <input type="radio" name="job_type" value="PyTorch">
+                        PyTorch
+                    </label>
+                    <label class="radio">
+                        <input type="radio" name="job_type" value="TensorFlow">
+                        TensorFlow
+                    </label>
+                </div>
+            </div>
+            <div class="field">
+                <label for="job_file">Job File</label>
+                <div for="job_file" class="control">
+                    <input class="input" type="file" name="job_file" id="job_file">
+                </div>
+            </div>
+            <button class="button is-link">Create</button>
+        </form>
+    </div>
+
+    <div class="card box column auto" style="height: auto; padding: 2rem;">
+        <div class="columns is-multiline">
+            {% for job in jobs %}
+            <a href="/jobs/{{ job.id }}"
+                class="column is-one-third-fullhd is-one-third-widescreen is-half-desktop is-full-tablet is-full-mobile">
+                <div class="card" style="height: 100%;">
+                    <div class="card-content">
+                        <div>
+                            <p class="title is-4">{{ job.name }}</p>
+                            <p class="subtitle is-6">{{ job.type }}</p>
+                            <progress class="progress is-success" value="30" max="100">60%</progress>
+                        </div>
+                        <figure class="image is-64x64" style="position: absolute; top: 20px; right: 20px;">
+                            <img class="is-rounded" src="https://bulma.io/images/placeholders/64x64.png">
+                        </figure>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 {% endblock %}
