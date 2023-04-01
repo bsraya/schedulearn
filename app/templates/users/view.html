@@ -4,65 +4,44 @@
 <div>
     {% include "components/navbar.html" %}
     <div class="columns block row">
-        <div class="column auto card box" style="padding: 2rem;">
-            <div class="centered">
-                <figure class="image is-128x128 block">
-                    <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png">
-                </figure>
-                <p class="title">{{ db_user.first_name }} {{ db_user.last_name }}</p>
-                <p class="subtitle block">{{ db_user.username }}</p>
-            </div>
-        </div>
-        <div class="column is-0"></div>
         <div class="column auto box card" style="padding: 2rem;">
             <div class="block" style="display: flex; align-items: center;">
-                <i class="fas fa-pen-to-square" style="margin-right: 10px;"></i>
-                <h1 class="card-title">Edit Profile</h1>
+                <i class="fas fa-pen-to-square fa-2xl" style="margin-right: 10px;"></i>
+                <h1 class="title is-3">Edit Profile</h1>
             </div>
             <form>
                 <div class="field">
                     <label for="first_name">First Name</label>
                     <div for="first_name" class="control">
-                        <input class="input" type="text" name="first_name" id="first_name"
-                            value="{{ db_user.first_name }}">
+                        <input class="input" type="text" name="first_name" id="first_name" value="{{ user.first_name }}">
                     </div>
                 </div>
                 <div class="field">
                     <label for="last_name">Last Name</label>
                     <div for="last_name" class="control">
-                        <input class="input" type="text" name="last_name" id="last_name"
-                            value="{{ db_user.last_name }}">
+                        <input class="input" type="text" name="last_name" id="last_name" value="{{ user.last_name }}">
                     </div>
                 </div>
                 <div class="field">
                     <label for="username">Username</label>
                     <div for="username" class="control">
-                        <input class="input" type="text" name="username" id="username" value="{{ db_user.username }}">
+                        <input class="input" type="text" name="username" id="username" value="{{ user.username }}">
                     </div>
                 </div>
                 <div class="field">
                     <label for="email">Email</label>
                     <div for="email" class="control">
-                        <input class="input" type="text" name="email" id="email" value="{{ db_user.email }}">
+                        <input class="input" type="text" name="email" id="email" value="{{ user.email }}">
                     </div>
                 </div>
-                <button class="button is-primary">Edit</button>
+                <button class="button is-link">Edit</button>
             </form>
-        </div>
-    </div>
-
-    <div class="columns block row">
-        <div class="column box card auto" style="padding: 2rem;">
-            <div class="centered">
-                <p class="subtitle">Email</p>
-                <p><i class="fas fa-envelope" style="margin-right: 0.5rem;"></i> {{ db_user.email }}</p>
-            </div>
-        </div>
-        <div class="column is-0"></div>
-        <div class="column box card auto" style="padding: 2rem;">
+    
+            <hr />
+    
             <div class="block" style="display: flex; align-items: center;">
-                <i class="fas fa-lock" style="margin-right: 10px;"></i>
-                <h1 class="card-title">
+                <i class="fas fa-lock fa-2xl" style="margin-right: 10px;"></i>
+                <h1 class="title is-3">
                     Change Password
                 </h1>
             </div>
@@ -70,24 +49,48 @@
                 <div class="field">
                     <label for="current_password">Current Password</label>
                     <div for="current_password" class="control">
-                        <input class="input" type="password" name="current_password" id="current_password">
+                        <input class="input" type="password" name="current_password" id="current_password" placeholder="Current Password">
                     </div>
                 </div>
-                <hr />
                 <div class="field">
                     <label for="password">Password</label>
                     <div for="password" class="control">
-                        <input class="input" type="password" name="password" id="password">
+                        <input class="input" type="password" name="password" id="password" placeholder="New Password">
                     </div>
+                    <p class="has-text-grey">
+                        <small>
+                            <i class="fas fa-info-circle" style="margin-right: 0.5rem;"></i>
+                            The new password must have at least 8 characters, 1 uppercase letter, and 1 number.
+                        </small>
+                    </p>
                 </div>
                 <div class="field">
                     <label for="confirm_password">Confirm Password</label>
                     <div for="confirm_password" class="control">
-                        <input class="input" type="password" name="confirm_password" id="confirm_password">
+                        <input class="input" type="password" name="confirm_password" id="confirm_password"
+                            placeholder="New Password Again">
                     </div>
                 </div>
-                <button class="button is-primary">Change</button>
+                <button class="button is-link">Change</button>
             </form>
+        </div>
+    
+        <div class="column is-0"></div>
+    
+        <div class="column auto card box" style="height: 500px; padding: 2rem;">
+            {% if db_user.admin %}
+            <div style="position: absolute; top: 10px; left: 10px;">
+                <div class="tag is-primary">Admin</div>
+            </div>
+            {% endif %}
+            <div class="centered">
+                <figure class="image is-128x128 block">
+                    <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png">
+                </figure>
+                <p class="title">{{ db_user.first_name }} {{ db_user.last_name }}</p>
+                <p class="subtitle block">{{ db_user.username }}</p>
+                <p><i class="fas fa-envelope" style="margin-right: 0.5rem;"></i> {{ db_user.email }}</p>
+            </div>
         </div>
     </div>
 </div>
