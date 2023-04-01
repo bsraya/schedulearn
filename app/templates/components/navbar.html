@@ -1,25 +1,28 @@
 {% block content %}
-<nav class="block" role="navigation" aria-label="main navigation">
+<nav class="block" role="navigation" aria-label="main navigation" x-data="{ isOpen: false}">
     <div class="navbar-brand">
-        <a class="navbar-item" href="https://bulma.io">
-            <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
+        <a class="navbar-item" href="/">
+            <img src="{{ url_for('static', path='/images/schedulearn.png') }}">
         </a>
 
-        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample"
+            @click="isOpen = !isOpen">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
         </a>
     </div>
 
-    <div id="navbarBasicExample" class="navbar-menu">
+    <div id="navbarBasicExample" class="navbar-menu" :class="{'is-active': isOpen}">
         <div class="navbar-start">
             {% if user %}
             <a class="navbar-item" href="/dashboard">
+                <i class="fas fa-tachometer-alt" style="margin-right: 10px;"></i>
                 Dashboard
             </a>
             {% else %}
             <a class="navbar-item" href="/">
+                <i class="fas fa-home" style="margin-right: 10px;"></i>
                 Home
             </a>
             {% endif %}
@@ -30,14 +33,17 @@
                 </p>
 
                 <div class="navbar-dropdown">
-                    <a class="navbar-item" href="/dashboard/users">
-                        Users
-                    </a>
                     <a class="navbar-item" href="/dashboard/jobs">
+                        <i class="fa-solid fa-briefcase" style="margin-right: 10px;"></i>
                         Jobs
+                    </a>
+                    <a class="navbar-item" href="/dashboard/users">
+                        <i class="fa-solid fa-users" style="margin-right: 10px;"></i>
+                        Users
                     </a>
                     <hr class="navbar-divider">
                     <a class="navbar-item" href="/dashboard/settings">
+                        <i class="fas fa-cog" style="margin-right: 10px;"></i>
                         System Settings
                     </a>
                 </div>
@@ -62,11 +68,11 @@
             <div class="navbar-item">
                 <div class="buttons">
                     <a class="button is-light" href="/dashboard/profile">
-                        <i class="fas fa-user" style="margin-right: 5px;"></i>
+                        <i class="fas fa-user" style="margin-right: 10px;"></i>
                         My Profile
                     </a>
-                    <a class="button is-light" href="/auth/signout">
-                        <i class="fas fa-sign-out-alt" style="margin-right: 5px;"></i>
+                    <a class="button is-danger" href="/auth/signout">
+                        <i class="fas fa-sign-out-alt" style="margin-right: 10px;"></i>
                         Sign Out
                     </a>
                 </div>
@@ -75,4 +81,9 @@
         {% endif %}
     </div>
 </nav>
+<style>
+    .is-shown {
+        display: block;
+    }
+</style>
 {% endblock %}
