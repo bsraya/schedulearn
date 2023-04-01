@@ -17,8 +17,8 @@
       <td>{{ job.created_at | format_date(format="short") }}</td>
       <td>Running</td>
       <td>
-        <a href="/job/{{ job.id }}/view" class="button is-light">View</a>
-        <a href="/job/{{ job.id }}/delete" class="button is-danger">Delete</a>
+        <a href="/jobs/{{ job.id }}" class="button is-light">View</a>
+        <a href="/jobs/{{ job.id }}" class="button is-danger">Delete</a>
       </td>
     </tr>
     {% endfor %}
