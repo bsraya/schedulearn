@@ -88,5 +88,7 @@ async def get_settings(prefix: str, request: Request, user: dict = Depends(autho
             return templates.TemplateResponse("dashboard/jobs.html", {"request": request, "user": user, "jobs": jobs, "dashboard": True})
         elif prefix == "profile":
             return templates.TemplateResponse("dashboard/profile.html", {"request": request, "user": user, "dashboard": True})
+        elif prefix == "settings":
+            return templates.TemplateResponse("dashboard/settings.html", {"request": request, "user": user, "dashboard": True})
         else:
             return RedirectResponse(url="/dashboard")
