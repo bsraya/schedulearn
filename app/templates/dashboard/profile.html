@@ -4,16 +4,35 @@
 <div>
     {% include "components/navbar.html" %}
     <div class="columns block row">
+        <div class="column auto card box" style="height: 500px; padding: 2rem;">
+            {% if user.admin %}
+            <div style="position: absolute; top: 10px; left: 10px;">
+                <div class="tag is-primary">Admin</div>
+            </div>
+            {% endif %}
+            <div class="centered">
+                <figure class="image is-128x128 block">
+                    <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png">
+                </figure>
+                <p class="title">{{ user.first_name }} {{ user.last_name }}</p>
+                <p class="subtitle block">{{ user.username }}</p>
+                <p><i class="fas fa-envelope fa-lg" style="margin-right: 0.5rem;"></i> {{ user.email }}</p>
+            </div>
+        </div>
+
+        <div class="column is-0"></div>
+
         <div class="column auto box card" style="padding: 2rem;">
             <div class="block" style="display: flex; align-items: center;">
-                <i class="fas fa-pen-to-square fa-2xl" style="margin-right: 10px;"></i>
-                <h1 class="title is-3">Edit Profile</h1>
+                <i class="fas fa-pen-to-square fa-xl" style="margin-right: 10px;"></i>
+                <h1 class="title is-4">Edit Profile</h1>
             </div>
             <form>
                 <div class="field">
                     <label for="first_name">First Name</label>
                     <div for="first_name" class="control">
-                        <input class="input" type="text" name="first_name" id="first_name" value="{{ user.first_name }}">
+                        <input class="input" type="text" name="first_name" id="first_name"
+                            value="{{ user.first_name }}">
                     </div>
                 </div>
                 <div class="field">
@@ -40,8 +59,8 @@
             <hr />
 
             <div class="block" style="display: flex; align-items: center;">
-                <i class="fas fa-lock fa-2xl" style="margin-right: 10px;"></i>
-                <h1 class="title is-3">
+                <i class="fas fa-lock fa-xl" style="margin-right: 10px;"></i>
+                <h1 class="title is-4">
                     Change Password
                 </h1>
             </div>
@@ -74,46 +93,15 @@
                 <button class="button is-link">Change</button>
             </form>
         </div>
-
-        <div class="column is-0"></div>
-
-        <div class="column auto card box" style="height: 500px; padding: 2rem;">
-            {% if user.admin %}
-            <div style="position: absolute; top: 10px; left: 10px;">
-                <div class="tag is-primary">Admin</div>
-            </div>
-            {% endif %}
-            <div class="centered">
-                <figure class="image is-128x128 block">
-                    <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png">
-                </figure>
-                <p class="title">{{ user.first_name }} {{ user.last_name }}</p>
-                <p class="subtitle block">{{ user.username }}</p>
-                <p><i class="fas fa-envelope" style="margin-right: 0.5rem;"></i> {{ user.email }}</p>
-            </div>
-        </div>
     </div>
 </div>
 <style>
     .centered {
-        display: flex; 
-        align-items: center; 
-        justify-content: center; 
+        display: flex;
+        align-items: center;
+        justify-content: center;
         flex-direction: column;
         height: 100%;
-    }
-
-    .card-title {
-        font-size: 1.25rem;
-    }
-
-    .has-border {
-        border-radius: 10px;
-        border: 3px solid #ccc;
-    }
-
-    .row:not(:last-child) {
-        margin-bottom: 3rem;
     }
 </style>
 {% endblock %}
