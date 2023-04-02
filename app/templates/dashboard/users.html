@@ -8,7 +8,7 @@
     Create User
 </a>
 <div class="columns is-multiline">
-    {% for user in users %}
+    {% for user in users | sort(attribute='first_name') %}
     <a class="column is-one-third-fullhd is-one-third-widescreen is-one-third-desktop is-half-tablet is-full-mobile"
         href="/users/{{ user.id }}">
         <div class="card">
