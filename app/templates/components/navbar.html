@@ -1,5 +1,5 @@
 {% block content %}
-<nav class="block" role="navigation" aria-label="main navigation" x-data="{ isOpen: false}">
+<nav class="navbar block is-info" role="navigation" aria-label="main navigation" x-data="{ isOpen: false}">
     <div class="navbar-brand">
         <a class="navbar-item" href="/">
             <img src="{{ url_for('static', path='/images/schedulearn.png') }}">
@@ -17,7 +17,7 @@
         <div class="navbar-start">
             {% if user %}
             <a class="navbar-item" href="/dashboard">
-                <i class="fas fa-tachometer-alt" style="margin-right: 10px;"></i>
+                <i class="fa-solid fa-table" style="margin-right: 10px;"></i>
                 Dashboard
             </a>
             {% else %}
@@ -27,6 +27,7 @@
             </a>
             {% endif %}
 
+            {% if user %}
             <div class="navbar-item has-dropdown is-hoverable">
                 <p class="navbar-link">
                     More
@@ -48,6 +49,7 @@
                     </a>
                 </div>
             </div>
+            {% endif %}
         </div>
 
         {% if not user %}
