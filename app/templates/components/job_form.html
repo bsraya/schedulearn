@@ -1,41 +1,38 @@
 {% block content %}
-<form class="box" action="/job/add" method="post" enctype="multipart/form-data">
+<form action="/job/add" method="post" enctype="multipart/form-data">
   <div class="field">
-    <label class="label">Job Name</label>
+    <label for="job_name">Job Name</label>
     <div for="job_name" class="control">
-      <input class="input" type="text" name="job_name" placeholder="PyTorch Job 1" style="width: 600px;">
+      <input class="input" type="text" name="job_name" id="job_name" placeholder="Apache MXNet MNIST">
+    </div>
+  </div>
+  <div class="field" x-data="{ isMxnet: true, isKeras: false, isPytorch: false, isTensorflow: false }">
+    <label for="job_type">Job Type</label>
+    <div for="job_type" class="control">
+      <label class="button is-rounded" style="margin-bottom: 5px;" :class="{ 'is-info': isMxnet }">
+        <input type="radio" name="job_type" value="Apache MXNet" style="margin-right: 5px;" :checked="isMxnet" @click="isMxnet = true; isKeras = false; isPytorch = false; isTensorflow = false;">
+        Apache MXNet
+      </label>
+      <label class="button is-rounded" style="margin-bottom: 5px;" :class="{ 'is-info': isKeras }">
+        <input type="radio" name="job_type" value="Keras" style="margin-right: 5px;" :checked="isKeras" @click="isMxnet = false; isKeras = true; isPytorch = false; isTensorflow = false;">
+        Keras
+      </label>
+      <label class="button is-rounded" style="margin-bottom: 5px;" :class="{ 'is-info': isPytorch }">
+        <input type="radio" name="job_type" value="PyTorch" style="margin-right: 5px;" :checked="isPytorch" @click="isMxnet = false; isKeras = false; isPytorch = true; isTensorflow = false;">
+        PyTorch
+      </label>
+      <label class="button is-rounded" style="margin-bottom: 5px;":class="{ 'is-info': isTensorflow }">
+        <input type="radio" name="job_type" value="TensorFlow" style="margin-right: 5px;" :checked="isTensorflow" @click="isMxnet = false; isKeras = false; isPytorch = false; isTensorflow = true;">
+        TensorFlow
+      </label>
     </div>
   </div>
   <div class="field">
-    <label class="label">Job Type</label>
-    <div class="control" style="margin-bottom: 20px;">
-      <label class="radio">
-        <input type="radio" name="job_type" value="PyTorch">
-        PyTorch
-      </label>
-      <label class="radio">
-        <input type="radio" name="job_type" value="PyTorch Lightning">
-        PyTorch Lightning
-      </label>
-      <label class="radio">
-        <input type="radio" name="job_type" value="TensorFlow">
-        TensorFlow
-      </label>
-      <label class="radio">
-        <input type="radio" name="job_type" value="Apache MXNet">
-        Apache MXNet
-      </label>
-      <label class="radio">
-        <input type="radio" name="job_type" value="Keras">
-        Keras
-      </label>
+    <label for="file">Script</label>
+    <div for="file" class="control">
+      <input class="input" type="file" name="file" id="file">
     </div>
-    <div class="field" style="margin-bottom: 20px;">
-      <label class="label">Upload File</label>
-      <div class="control">
-        <input class="input" type="file" name="file" placeholder="Upload File" style="width: 600px;">
-      </div>
-    </div>
-    <button class="button is-primary" style="margin-top:10px;">Submit</button>
+  </div>
+  <button class="button is-info">Create</button>
 </form>
 {% endblock %}
