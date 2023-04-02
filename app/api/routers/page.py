@@ -39,10 +39,9 @@ async def signup(request: Request):
 @router.get("/users/{prefix:path}", response_class=HTMLResponse)
 async def get_user(prefix: str, request: Request, user: dict = Depends(authorize_user)):
     if prefix == "create":
-        if not user.get('admin'):
-            return HTTPException(status_code=HTTP_403_FORBIDDEN, detail="Not authorized")
-        return templates.TemplateResponse("users/create.html", {"request": request, "user": user})
-    # else if /users/1/view
+        with Session(engine) as session:
+            users = session.exec(select(User)).all()
+            return templates.TemplateResponse("users/create.html", {"request": request, "user": user, "users": users})
     elif prefix.isnumeric():
         with Session(engine) as session:
             db_user = session.exec(
@@ -56,6 +55,7 @@ async def get_user(prefix: str, request: Request, user: dict = Depends(authorize
             return templates.TemplateResponse("users/view.html", {"request": request, "user": user, "db_user": db_user})
     else:
         return RedirectResponse(url="/dashboard/users")
+
 
 @router.get("/jobs/{prefix:path}", response_class=HTMLResponse)
 async def get_jobs(prefix: str, request: Request, user: dict = Depends(authorize_user)):
@@ -74,6 +74,7 @@ async def get_jobs(prefix: str, request: Request, user: dict = Depends(authorize
             ).first()
             return templates.TemplateResponse("jobs/view.html", {"request": request, "user": user, "job": job})
 
+
 @router.get("/dashboard/{prefix:path}", response_class=HTMLResponse)
 async def get_settings(prefix: str, request: Request, user: dict = Depends(authorize_user)):
     if user.get("admin") == False:
@@ -82,10 +83,20 @@ async def get_settings(prefix: str, request: Request, user: dict = Depends(autho
     with Session(engine) as session:
         if prefix == "":
             with Session(engine) as session:
-                user_jobs = session.exec(
-                    select(Job).where(Job.user_id == user.get("id"))
+                jobs = session.exec(select(Job)).all()
+                users = session.exec(select(User)).all()
+                return templates.TemplateResponse(
+                    "dashboard.html", 
+                    {
+                        "request": request, 
+                        "user": user, 
+                        "dashboard": True,
+                        "jobs": jobs,
+                        "users": users,
+                        "no_of_servers": 3,
+                        "no_of_gpus": 12
+                    }
                 )
-                return templates.TemplateResponse("dashboard.html", {"request": request, "user": user, "user_jobs": user_jobs, "dashboard": True})
         elif prefix == "users":
             users = session.exec(select(User)).all()
             return templates.TemplateResponse("dashboard/users.html", {"request": request, "user": user, "users": users, "dashboard": True})
