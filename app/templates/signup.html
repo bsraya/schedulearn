@@ -1,8 +1,8 @@
 {% extends "index.html" %}
 
 {% block content %}
-<div>
-  {% include "components/navbar.html" %}
+{% include "components/navbar.html" %}
+<div class="container">
   <h1 style="font-size: 3rem;">Sign Up</h1>
   <form class="box" action="/auth/signup" method="post" style="width: 500px;">
     <div class="field">

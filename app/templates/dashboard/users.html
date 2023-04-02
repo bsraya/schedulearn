@@ -1,43 +1,42 @@
 {% extends "index.html" %}
 
 {% block content %}
-<div>
-    {% include "components/navbar.html" %}
-    <a class="button is-info block" href="/users/create">
-        <i class="fa-solid fa-user-plus" style="margin-right: 10px;"></i>
-        Create User
-    </a>
-    <div class="columns is-multiline">
-        {% for user in users %}
-        <a class="column is-one-third-fullhd is-one-third-widescreen is-one-third-desktop is-half-tablet is-full-mobile"
-            href="/users/{{ user.id }}">
-            <div class="card">
-                <div class="card-content">
-                    <div style="display: flex; align-items: center;">
-                        <figure class="image is-64x64">
-                            <img class="is-rounded" src="https://bulma.io/images/placeholders/64x64.png">
-                        </figure>
-                        <div style="margin-left: 20px;">
-                            <p>{{ user.first_name }} {{ user.last_name }} </p>
-                            <p style="font-size: 0.9rem" class="has-text-grey">
-                                <i class="fas fa-user" style="margin-right: 5px;"></i>
-                                {{ user.username }}
-                            </p>
-                            <p style=" font-size: 0.9rem" class="has-text-grey">
-                                <i class="fas fa-envelope" style="margin-right: 5px;"></i>
-                                {{ user.email }}
-                            </p>
-                        </div>
+{% include "components/navbar.html" %}
+<div class="container">
+<a class="button is-info block" href="/users/create">
+    <i class="fa-solid fa-user-plus" style="margin-right: 10px;"></i>
+    Create User
+</a>
+<div class="columns is-multiline">
+    {% for user in users %}
+    <a class="column is-one-third-fullhd is-one-third-widescreen is-one-third-desktop is-half-tablet is-full-mobile"
+        href="/users/{{ user.id }}">
+        <div class="card">
+            <div class="card-content">
+                <div style="display: flex; align-items: center;">
+                    <figure class="image is-64x64">
+                        <img class="is-rounded" src="https://bulma.io/images/placeholders/64x64.png">
+                    </figure>
+                    <div style="margin-left: 20px;">
+                        <p>{{ user.first_name }} {{ user.last_name }} </p>
+                        <p style="font-size: 0.9rem" class="has-text-grey">
+                            <i class="fas fa-user" style="margin-right: 5px;"></i>
+                            {{ user.username }}
+                        </p>
+                        <p style=" font-size: 0.9rem" class="has-text-grey">
+                            <i class="fas fa-envelope" style="margin-right: 5px;"></i>
+                            {{ user.email }}
+                        </p>
                     </div>
-                    {% if user.admin %}
-                    <div style="position: absolute; top: 10px; right: 10px;">
-                        <div class="tag is-primary">Admin</div>
-                    </div>
-                    {% endif %}
                 </div>
+                {% if user.admin %}
+                <div style="position: absolute; top: 10px; right: 10px;">
+                    <div class="tag is-primary">Admin</div>
+                </div>
+                {% endif %}
             </div>
-        </a>
-        {% endfor %}
-    </div>
+        </div>
+    </a>
+    {% endfor %}
 </div>
 {% endblock %}
