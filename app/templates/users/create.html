@@ -1,58 +1,51 @@
 {% extends "index.html" %}
 
 {% block content %}
-<div>
-  {% include "components/navbar.html" %}
-  <div class="columns">
-  <div class="column block row is-7">
-    <h1 style="font-size: 2rem;">Create A New User</h1>
-    <form method="POST" class="box" action="/admin/create_user">
-      <div class="field">
-        <label for="first_name" style="display: inline-block; width: 100px; vertical-align: middle;">First Name</label>
-        <div for="first_name" class="control" style="display: inline-block; margin-left: 10px; vertical-align: middle;">
-          <input class="input" type="text" name="first_name" id="first_name" placeholder="First Name">
-        </div>
-        
+{% include "components/navbar.html" %}
+<div class="container">
+  <div class="columns block is-multiline">
+    <div class="card box column is-one-third-fullhd is-one-third-widescreen is-one-third-desktop is-full-tablet is-full-mobile"
+      style="padding: 2rem; height: 625px; margin-right: 2rem;">
+      <div class="block" style="display: flex; align-items: center;">
+        <i class="fa-solid fa-user-plus fa-xl" style="margin-right: 10px;"></i>
+        <h1 class="title is-4">Create User</h1>
       </div>
-      <div class="field">
-        <label for="last_name" style="display: inline-block; width: 100px; vertical-align: middle;">Last Name</label>
-        <div for="last_name" class="control" style="display: inline-block; margin-left: 10px; vertical-align: middle;">
-          <input class="input" type="text" name="last_name" id="last_name" placeholder="Last Name">
-        </div>
+      {% include "components/user_form.html" %}
+    </div>
+
+    <div class="column auto" style="height: auto;">
+      <div class="columns is-multiline">
+        {% for user in users %}
+        <a class="column is-half-fullhd is-half-widescreen is-half-desktop is-full-tablet is-full-mobile"
+          href="/users/{{ user.id }}">
+          <div class="card">
+            <div class="card-content">
+              <div style="display: flex; align-items: center;">
+                <figure class="image is-64x64">
+                  <img class="is-rounded" src="https://bulma.io/images/placeholders/64x64.png">
+                </figure>
+                <div style="margin-left: 20px;">
+                  <p>{{ user.first_name }} {{ user.last_name }} </p>
+                  <p style="font-size: 0.9rem" class="has-text-grey">
+                    <i class="fas fa-user" style="margin-right: 5px;"></i>
+                    {{ user.username }}
+                  </p>
+                  <p style=" font-size: 0.9rem" class="has-text-grey">
+                    <i class="fas fa-envelope" style="margin-right: 5px;"></i>
+                    {{ user.email }}
+                  </p>
+                </div>
+              </div>
+              {% if user.admin %}
+              <div style="position: absolute; top: 10px; right: 10px;">
+                <div class="tag is-primary">Admin</div>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </a>
+        {% endfor %}
       </div>
-      <div class="field">
-        <label for="role" style="display: inline-block; width: 100px; line-height: 1.5; vertical-align: middle;">Role</label>
-        <div for="role" class="control" style="display: inline-block; margin-left: 10px; vertical-align: middle;">
-          <label class="radio" style="display: inline-block; margin-right: 10px;">
-            <input type="radio" name="role" value="admin">
-            Admin
-          </label>
-          <label class="radio" style="display: inline-block;">
-            <input type="radio" name="role" value="user">
-            User
-          </label>
-        </div>
-      </div>
-      <div class="field">
-        <label for="username" style="display: inline-block; width: 100px; vertical-align: middle;">Username</label>
-        <div for="username" class="control" style="display: inline-block; margin-left: 10px; vertical-align: middle;">
-          <input class="input" type="text" name="username" id="username">
-        </div>
-      </div>
-      <div class="field">
-        <label for="email" style="display: inline-block; width: 100px; vertical-align: middle;">Email</label>
-        <div for="email" class="control" style="display: inline-block; margin-left: 10px; vertical-align: middle;">
-          <input class="input" type="text" name="email" id="email">
-        </div>
-      </div>
-      <div class="field">
-        <label for="password" style="display: inline-block; width: 100px; vertical-align: middle;">Password</label>
-        <div for="password" class="control" style="display: inline-block; margin-left: 10px; vertical-align: middle;">
-          <input class="input" type="password" name="password" id="password">
-        </div>
-      </div>
-      <button class="button is-primary" type="submit">Create</button>
-    </form>
     </div>
   </div>
 </div>

@@ -1,7 +1,7 @@
 {% extends "index.html" %}
 {% block content %}
 {% include "components/navbar.html" %}
-<div class="block">
+<div class="container block">
     <a class="button is-info block" href="/jobs/create">
         <i class="fa-solid fa-file-circle-plus" style="margin-right: 10px;"></i>
         Create Job
@@ -9,17 +9,29 @@
     <div class="columns is-multiline">
         {% for job in jobs %}
         <a href="/jobs/{{ job.id }}"
-            class="column is-one-third-fullhd is-one-third-widescreen is-one-third-desktop is-one-third-tablet is-full-mobile">
+            class="column is-one-quarter-fullhd is-one-third-widescreen is-one-third-desktop is-half-tablet is-full-mobile">
             <div class="card" style="height: 100%;">
                 <div class="card-content">
-                    <div>
-                        <p class="title is-4">{{ job.name }}</p>
-                        <p class="subtitle is-6">{{ job.type }}</p>
-                        <progress class="progress is-success" value="30" max="100">60%</progress>
+                    <div class="block" style="display: flex; width: 100%;">
+                        <span>
+                            <p class="title is-6">{{ job.name }}</p>
+                            <p class="subtitle is-6">{{ job.type }}</p>
+                        </span>
+                        <span style="margin-left: auto;">
+                            <button href="/jobs/{{ job.id }}" class="button is-light" style="width: 45px;">
+                                <!-- View -->
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button href="/jobs/{{ job.id }}" class="button is-danger" style="width: 45px;">
+                                <!-- Delete -->
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </span>
                     </div>
-                    <figure class="image is-64x64" style="position: absolute; top: 20px; right: 20px;">
-                        <img class="is-rounded" src="https://bulma.io/images/placeholders/64x64.png">
-                    </figure>
+                    Elapsed: 
+                    <span style="font-weight: bold;">
+                        00:20 Hour(s)
+                    </span>
                 </div>
             </div>
         </a>
