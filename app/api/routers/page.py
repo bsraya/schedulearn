@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.api.models import engine
 from app.api.models.user import User
 from app.api.models.job import Job
-from app.api.shared.utils.security import authorize_user, get_authorized_user
+from app.api.shared.utils.security import authorize_user, get_authorized_user, determine_role
 from fastapi.requests import Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -13,6 +13,7 @@ from app.api.shared.utils.filters import format_date
 templates = Jinja2Templates(directory="app/templates")
 
 templates.env.filters["format_date"] = format_date
+templates.env.filters["determine_role"] = determine_role
 
 router = APIRouter()
 
@@ -77,13 +78,13 @@ async def get_jobs(prefix: str, request: Request, user: dict = Depends(authorize
 
 @router.get("/dashboard/{prefix:path}", response_class=HTMLResponse)
 async def get_settings(prefix: str, request: Request, user: dict = Depends(authorize_user)):
-    if user.get("admin") == False:
-        raise HTTPException(status_code=HTTP_403_FORBIDDEN, detail="Not authorized")
-
     with Session(engine) as session:
         if prefix == "":
             with Session(engine) as session:
-                jobs = session.exec(select(Job)).all()
+                if determine_role(user.get("role_mask")) in ["admin", "superadmin"]:
+                    jobs = session.exec(select(Job)).all()
+                else:
+                    jobs = session.exec(select(Job).where(Job.user_id == user.get("id"))).all()
                 users = session.exec(select(User)).all()
                 return templates.TemplateResponse(
                     "dashboard.html", 
@@ -99,13 +100,18 @@ async def get_settings(prefix: str, request: Request, user: dict = Depends(autho
                 )
         elif prefix == "users":
             users = session.exec(select(User)).all()
-            return templates.TemplateResponse("dashboard/users.html", {"request": request, "user": user, "users": users, "dashboard": True})
+            return templates.TemplateResponse("dashboard/users.html", {"request": request, "user": user, "users": users })
         elif prefix == "jobs":
-            jobs = session.exec(select(Job)).all()
-            return templates.TemplateResponse("dashboard/jobs.html", {"request": request, "user": user, "jobs": jobs, "dashboard": True})
+            if determine_role(user.get("role_mask")) in ["admin", "superadmin"]:
+                jobs = session.exec(select(Job)).all()
+            else:
+                jobs = session.exec(select(Job).where(Job.user_id == user.get("id"))).all()
+            return templates.TemplateResponse("dashboard/jobs.html", {"request": request, "user": user, "jobs": jobs })
         elif prefix == "profile":
-            return templates.TemplateResponse("dashboard/profile.html", {"request": request, "user": user, "dashboard": True})
+            return templates.TemplateResponse("dashboard/profile.html", {"request": request, "user": user })
         elif prefix == "settings":
-            return templates.TemplateResponse("dashboard/settings.html", {"request": request, "user": user, "dashboard": True})
+            if determine_role(user.get("role_mask")) not in ["admin", "superadmin"]:
+                raise HTTPException(status_code=HTTP_403_FORBIDDEN, detail="Not authorized")
+            return templates.TemplateResponse("dashboard/settings.html", {"request": request, "user": user })
         else:
             return RedirectResponse(url="/dashboard")

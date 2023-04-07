@@ -20,35 +20,26 @@
                 <i class="fa-solid fa-table" style="margin-right: 10px;"></i>
                 Dashboard
             </a>
+            <a class="navbar-item" href="/dashboard/jobs">
+                <i class="fa-solid fa-briefcase" style="margin-right: 10px;"></i>
+                Jobs
+            </a>
+            {% if user.role_mask | determine_role in ['admin', 'superadmin'] %}
+            <a class="navbar-item" href="/dashboard/users">
+                <i class="fa-solid fa-users" style="margin-right: 10px;"></i>
+                Users
+            </a>
+            <hr class="navbar-divider">
+            <a class="navbar-item" href="/dashboard/settings">
+                <i class="fas fa-cog" style="margin-right: 10px;"></i>
+                System Settings
+            </a>
+            {% endif %}
             {% else %}
             <a class="navbar-item" href="/">
                 <i class="fas fa-home" style="margin-right: 10px;"></i>
                 Home
             </a>
-            {% endif %}
-
-            {% if user %}
-            <div class="navbar-item has-dropdown is-hoverable">
-                <p class="navbar-link">
-                    More
-                </p>
-
-                <div class="navbar-dropdown">
-                    <a class="navbar-item" href="/dashboard/jobs">
-                        <i class="fa-solid fa-briefcase" style="margin-right: 10px;"></i>
-                        Jobs
-                    </a>
-                    <a class="navbar-item" href="/dashboard/users">
-                        <i class="fa-solid fa-users" style="margin-right: 10px;"></i>
-                        Users
-                    </a>
-                    <hr class="navbar-divider">
-                    <a class="navbar-item" href="/dashboard/settings">
-                        <i class="fas fa-cog" style="margin-right: 10px;"></i>
-                        System Settings
-                    </a>
-                </div>
-            </div>
             {% endif %}
         </div>
 

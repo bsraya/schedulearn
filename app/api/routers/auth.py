@@ -8,7 +8,7 @@ from app.api.schemas.user import SignupForm
 from fastapi import APIRouter, Request, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.responses import RedirectResponse, JSONResponse
-from app.api.shared.utils.security import pwd_context, authenticate_user, create_access_token
+from app.api.shared.utils.security import pwd_context, authenticate_user, create_access_token, determine_role
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -37,7 +37,7 @@ async def signin(request: Request):
             "username": user.username,
             "first_name": user.first_name,
             "last_name": user.last_name,
-            "admin": user.admin
+            "role_mask": user.role_mask,
         }, 
         expires_delta = timedelta(minutes=EXPIRE_IN_MINUTES)
     )
@@ -99,7 +99,7 @@ async def signup(request: Request):
             username=form["username"],
             email=form["email"],
             hashed_password=pwd_context.hash(form["password"]),
-            admin=False,
+            role_mask=1,
             created_at=datetime.now(),
             updated_at=datetime.now()
         )

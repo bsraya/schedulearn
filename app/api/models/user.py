@@ -9,7 +9,7 @@ class User(SQLModel, table=True):
     last_name: str = Field(default=None)
     first_name: str = Field(default=None)
     hashed_password: str = Field(default=None)
-    admin: bool = Field(default=False)
+    role_mask: int = Field(default=1)
 
     created_at: Optional[datetime] = Field(default=None)
     updated_at: Optional[datetime] = Field(default=None)

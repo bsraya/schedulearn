@@ -8,13 +8,13 @@ from fastapi import APIRouter, Request, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi import Depends, HTTPException
 from starlette.status import HTTP_403_FORBIDDEN
-from app.api.shared.utils.security import authorize_user
+from app.api.shared.utils.security import authorize_user, determine_role
 
 router = APIRouter()
 
 @router.post("/create_user", response_class=HTMLResponse)
 async def create_user(request: Request, user: dict = Depends(authorize_user)):
-    if not user.get("admin"):
+    if determine_role(user.get('role_mask')) not in ["superadmin", "admin"]:
         raise HTTPException(
             status_code=HTTP_403_FORBIDDEN,
             detail="You are not authorized to create a user!"
@@ -52,13 +52,23 @@ async def create_user(request: Request, user: dict = Depends(authorize_user)):
                 },
             )
         
+        if form["admin"].isnumeric and int(form["admin"]) == 1:
+            role_mask = int(0b011)
+        elif form["admin"].isnumeric and int(form["admin"]) == 0:
+            role_mask = int(0b001)
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid role mask!"
+            )
+        
         new_user = User(
             first_name=form["first_name"],
             last_name=form["last_name"],
             username=form["username"],
             email=form["email"],
             hashed_password=pwd_context.hash(form["password"]),
-            admin=True if form["role"] == "Admin" else False,
+            role_mask = role_mask,
             created_at=datetime.now(),
             updated_at=datetime.now()
         )
@@ -68,20 +78,42 @@ async def create_user(request: Request, user: dict = Depends(authorize_user)):
         session.refresh(new_user)
 
         return RedirectResponse(
-            url="/settings/users",
+            url="/dashboard/users",
             status_code=303
         )
 
 
+@router.post("/users", response_class=HTMLResponse)
+async def users(request: Request, user: dict = Depends(authorize_user)):
+    if determine_role(user.get('role_mask')) not in ["superadmin", "admin"]:
+        raise HTTPException(
+            status_code=HTTP_403_FORBIDDEN,
+            detail="You are not authorized to create a user!"
+        )
+
+
 @router.put("/edit_user/{user_id}", response_class=HTMLResponse)
-async def edit_user(request: Request, user_id: int):
-    pass
+async def edit_user(request: Request, user_id: int, user: dict = Depends(authorize_user)):
+    if determine_role(user.get('role_mask')) not in ["superadmin", "admin"]:
+        raise HTTPException(
+            status_code=HTTP_403_FORBIDDEN,
+            detail="You are not authorized to create a user!"
+        )
 
 
 @router.delete("/delete_user/{user_id}", response_class=HTMLResponse)
-async def delete_user(request: Request, user_id: int):
-    pass
+async def delete_user(request: Request, user_id: int, user: dict = Depends(authorize_user)):
+    if determine_role(user.get('role_mask')) not in ["superadmin", "admin"]:
+        raise HTTPException(
+            status_code=HTTP_403_FORBIDDEN,
+            detail="You are not authorized to create a user!"
+        )
+
 
 @router.put("/change_schduler", response_class=HTMLResponse)
-async def change_scheduler(request: Request):
-    pass
+async def change_scheduler(request: Request, user: dict = Depends(authorize_user)):
+    if determine_role(user.get('role_mask')) not in ["superadmin", "admin"]:
+        raise HTTPException(
+            status_code=HTTP_403_FORBIDDEN,
+            detail="You are not authorized to create a user!"
+        )

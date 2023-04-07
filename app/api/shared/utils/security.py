@@ -10,6 +10,7 @@ from fastapi.requests import Request
 from fastapi.responses import JSONResponse
 from starlette.status import HTTP_403_FORBIDDEN
 from fastapi.security.utils import get_authorization_scheme_param
+from typing import Final
 
 pwd_context = CryptContext(
     schemes=["sha256_crypt", "ldap_salted_md5"],
@@ -18,6 +19,11 @@ pwd_context = CryptContext(
     deprecated="auto"
 )
 
+ROLE_MASKS: Final = {
+    bin(0b001): "user",
+    bin(0b011): "admin",
+    bin(0b101): "superadmin"
+}
 
 def get_authorized_user(request: Request) -> dict | None:
     cookie_authorization: str = request.cookies.get('Authorization')
@@ -122,3 +128,6 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     )
 
     return encoded_jwt
+
+def determine_role(role_mask: int) -> str:
+    return ROLE_MASKS.get(bin(role_mask), "user")

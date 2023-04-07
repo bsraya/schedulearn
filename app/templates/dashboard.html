@@ -4,6 +4,7 @@
 {% if user %}
 {% include "components/navbar.html" %}
 <div class="container">
+  {% if user.role_mask | determine_role in ['admin', 'superadmin'] %}
   <div class="block">
     <div class="columns">
       <div class="column is-one-fourth card" style="display: flex;">
@@ -39,6 +40,7 @@
       </div>
     </div>
   </div>
+  {% endif %}
 
   <div class="block">
     <div class="columns is-multiline">
