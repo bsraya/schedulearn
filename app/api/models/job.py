@@ -3,11 +3,11 @@ from typing import Optional
 from datetime import datetime
 
 class Job(SQLModel, table=True):
-    # id is a must for each job and it is the primary key and incremented automatically
     id: Optional[int] = Field(default=None, primary_key=True)
     name: Optional[str] = Field(default=None)
     type: Optional[str] = Field(default=None)
     container: Optional[str] = Field(default=None)
+    status : Optional[str] = Field(default=None)
     script: Optional[str] = Field(default=None)
     started_at: Optional[datetime] = Field(default=None)
     completed_at: Optional[datetime] = Field(default=None)
