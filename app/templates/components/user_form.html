@@ -17,11 +17,11 @@
       style="display: inline-block; width: 100px; line-height: 1.5; vertical-align: middle;">Admin</label>
     <div for="admin" class="control" x-data="{ isAdmin: false }">
       <label class="button is-rounded" style="margin-bottom: 5px;" :class="{ 'is-info': isAdmin }">
-        <input type="radio" name="admin" value="true" style="margin-right: 5px;" @click="isAdmin = true;">
+        <input type="radio" name="admin" value="1" style="margin-right: 5px;" @click="isAdmin = true;">
         Yes
       </label>
       <label class="button is-rounded" style="margin-bottom: 5px;" :class="{ 'is-info': !isAdmin }">
-        <input checked type="radio" name="admin" value="false" style="margin-right: 5px;" @click="isAdmin = false;">
+        <input checked type="radio" name="admin" value="0" style="margin-right: 5px;" @click="isAdmin = false;">
         No
       </label>
     </div>
