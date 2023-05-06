@@ -1,7 +1,44 @@
 {% extends "index.html" %}
 
 {% block content %}
-
-{% include "components/navbar.html" %}
+<div class="container">
+  <form>
+    <div class="field">
+      <label class="title is-4" for="scheduling_algorithm">Scheduling Algorithm</label>
+      <div for="scheduling_algorithm">
+        <div class="columns is-multiline">
+          <div class="column auto">
+            <label class="box" style="height: 150px;">
+              <p style="height: 100px;">Runs jobs based on the time they were submitted.</p>
+              <div class="heading">
+                <input type="radio" name="scheduling_algorithm" value="fifo" checked>
+                FIFO
+              </div>
+            </label>
+          </div>
+          <div class="column auto">
+            <label class="box" style="height: 150px;">
+              <p style="height: 100px;">A load balancing algorithm, good at splitting workload evenly across the system.</p>
+              <div class="heading">
+                <input type="radio" name="scheduling_algorithm" value="roundrobin" checked>
+                Round Robin
+              </div>
+            </label>
+          </div>
+          <div class="column auto">
+            <label class="box" style="height: 150px;">
+              <p style="height: 100px;">Like FIFO, with resource scaling. Reduces training time.</p>
+              <div class="heading">
+                <input type="radio" name="scheduling_algorithm" value="elasticfifo" checked>
+                Elastic FIFO
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="button is-info">Save</button>
+  </form>
+</div>
 
 {% endblock %}
