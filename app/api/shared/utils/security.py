@@ -1,7 +1,6 @@
 from jose import jwt, JWTError
 from sqlmodel import select, Session
 from dotenv import dotenv_values
-from app.api.models import engine
 from app.api.models.user import User
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
@@ -50,6 +49,7 @@ def get_authorized_user(request: Request) -> dict | None:
 
 
 def authenticate_user(username: str, password: str) -> User | bool:
+    from app.api.db import engine
     with Session(engine) as session:
         user = session.exec(
             select(User)
