@@ -1,5 +1,5 @@
-from typing import Optional
 from datetime import datetime
+from typing import Optional
 from sqlmodel import Field, SQLModel
 
 class User(SQLModel, table=True):
@@ -11,5 +11,5 @@ class User(SQLModel, table=True):
     hashed_password: str = Field(default=None)
     role_mask: int = Field(default=1)
 
-    created_at: Optional[datetime] = Field(default=None)
-    updated_at: Optional[datetime] = Field(default=None)
+    created_at: datetime = Field(default = datetime.utcnow())
+    updated_at: datetime = Field(default = datetime.utcnow())

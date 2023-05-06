@@ -1,9 +1,11 @@
-from sqlmodel import Field, SQLModel
-from typing import Optional
 from datetime import datetime
+from typing import Optional
+from sqlmodel import Field, SQLModel
 
 class System(SQLModel, table=True):
-    scheduler: Optional[str] = Field(default="ElasticFIFO")
-    previous_server: str = "gpu5"
-    current_server: str = "gpu3"
-    next_server: str = "gpu4"
+    id: Optional[int] = Field(primary_key=True)
+    configuration: Optional[str]
+    value: Optional[str]
+
+    created_at: datetime = Field(default = datetime.utcnow())
+    updated_at: datetime = Field(default = datetime.utcnow())
