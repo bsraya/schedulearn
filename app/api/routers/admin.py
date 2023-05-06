@@ -1,6 +1,6 @@
 from datetime import datetime
 from sqlmodel import select, Session
-from app.api.models import engine
+from app.api.db import engine
 from app.api.models.user import User
 from app.api.schemas.user import SignupForm
 from app.api.shared.utils.security import pwd_context
