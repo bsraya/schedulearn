@@ -1,7 +1,7 @@
 import uvicorn
 from app import app
-from app.api.db import create_db_and_tables, save_system_settings
 from dotenv import dotenv_values
+from app.api.db import create_db_and_tables, save_system_settings
 
 @app.on_event("startup")
 async def startup_event():
