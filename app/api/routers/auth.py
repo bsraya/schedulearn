@@ -2,7 +2,7 @@ from typing import Final
 from dotenv import dotenv_values
 from sqlmodel import select, Session
 from datetime import datetime, timedelta
-from app.api.models import engine
+from app.api.db import engine
 from app.api.models.user import User
 from app.api.schemas.user import SignupForm
 from fastapi import APIRouter, Request, HTTPException
