@@ -2,14 +2,13 @@
 
 {% block content %}
 {% if user %}
-{% include "components/navbar.html" %}
 <div class="container">
   {% if user.role_mask | determine_role in ['admin', 'superadmin'] %}
   <div class="block">
     <div class="columns">
       <div class="column is-one-fourth card" style="display: flex;">
         <div>
-          <p>Total Users</p>
+          <p class="heading">Total Users</p>
           <p class="title is-3">{{ users | length }}</p>
         </div>
         <i class="fas fa-users fa-2xl" style="margin: auto 0 auto auto;"></i>
@@ -17,7 +16,7 @@
       <div class="column is-0"></div>
       <div class="column is-one-fourth card"  style="display: flex;">
         <div>
-          <p>Total Jobs</p>
+          <p class="heading">Total Jobs</p>
           <p class="title is-3">{{ jobs | length }}</p>
         </div>
         <i class="fas fa-tasks fa-2xl" style="margin: auto 0 auto auto;"></i>
@@ -25,7 +24,7 @@
       <div class="column is-0"></div>
       <div class="column is-one-fourth card"  style="display: flex;">
         <div>
-          <p>Total Servers</p>
+          <p class="heading">Total Servers</p>
           <p class="title is-3">{{ no_of_servers }}</p>
         </div>
         <i class="fas fa-server fa-2xl" style="margin: auto 0 auto auto;"></i>
@@ -33,7 +32,7 @@
       <div class="column is-0"></div>
       <div class="column is-one-fourth card"  style="display: flex;">
         <div>
-          <p>Total GPUs</p>
+          <p class="heading">Total GPUs</p>
           <p class="title is-3">{{ no_of_gpus }}</p>
         </div>
         <i class="fas fa-microchip fa-2xl" style="margin: auto 0 auto auto;"></i>
@@ -45,18 +44,18 @@
   <div class="block">
     <div class="columns is-multiline">
       <div class="column card auto">
-        <h1 class="title is-4">Server Analytics</h1>
+        <h1 class="heading">Server Analytics</h1>
       </div>
       <div class="column is-0"></div>
       <div class="column card auto">
-        <h1 class="title is-4">GPU Utilization</h1>
+        <h1 class="heading">GPU Utilization</h1>
       </div>
     </div>
   </div>
 
   <div class="columns block" >
     <div class="column auto card">
-      <h1 class="title is-4 block">Recent Jobs</h1>
+      <h1 class="heading block">Recent Jobs</h1>
         {% with jobs = jobs %}
           {% include "components/job_table.html" %}
         {% endwith %}
