@@ -17,14 +17,13 @@
 
 <body>
   <main>
-    {% block content %}
     {% include "components/navbar.html" %}
-    <div class="container">
-      <h1 class="block" style="font-size: 3rem;">Schedulearn</h1>
-      <p class="block">Schedulearn is a platform that makes scheduling deep learning models easy.</p>
+    <div class="container" style="padding: 1rem;">
+      {% block content %}
+        <h1 class="block" style="font-size: 3rem;">Schedulearn</h1>
+        <p class="block">Schedulearn is a platform that makes scheduling deep learning models easy.</p>
+      {% endblock %}
     </div>
-    <!-- put the component here -->
-    {% endblock %}
   </main>
   <script src="{{ url_for('static', path='/js/app.js') }}"></script>
 </body>

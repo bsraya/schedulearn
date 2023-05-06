@@ -1,6 +1,5 @@
 {% extends "index.html" %}
 {% block content %}
-{% include "components/navbar.html" %}
 <div class="container block">
     <a class="button is-info block" href="/jobs/create">
         <i class="fa-solid fa-file-circle-plus" style="margin-right: 10px;"></i>
@@ -9,7 +8,7 @@
     <div class="columns is-multiline">
         {% for job in jobs %}
         <a href="/jobs/{{ job.id }}"
-            class="column is-one-quarter-fullhd is-one-third-widescreen is-one-third-desktop is-half-tablet is-full-mobile">
+            class="column is-one-third-fullhd is-half-widescreen is-half-desktop is-half-tablet is-full-mobile">
             <div class="card" style="height: 100%;">
                 <div class="card-content">
                     <div class="block" style="display: flex; width: 100%;">
@@ -18,11 +17,11 @@
                             <p class="subtitle is-6">{{ job.type }}</p>
                         </span>
                         <span style="margin-left: auto;">
-                            <button href="/jobs/{{ job.id }}" class="button is-light" style="width: 45px;">
+                            <button href="/jobs/{{ job.id }}" class="button is-light" style="width: 40px;">
                                 <!-- View -->
                                 <i class="fas fa-eye"></i>
                             </button>
-                            <button href="/jobs/{{ job.id }}" class="button is-danger" style="width: 45px;">
+                            <button href="/jobs/{{ job.id }}" class="button is-danger" style="width: 40px;">
                                 <!-- Delete -->
                                 <i class="fas fa-trash"></i>
                             </button>
