@@ -13,6 +13,7 @@ class Job(SQLModel, table=True):
     completed_at: Optional[datetime] = Field(default=None)
     trained_at_server: Optional[str] = Field(default=None)
     trained_at_gpus: Optional[str] = Field(default=None)
+    scheduler: Optional[str] = Field(default=None)
 
     user_id: Optional[int] = Field(default=None, foreign_key="user.id")
     created_at: datetime = Field(default = datetime.utcnow())
