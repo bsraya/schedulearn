@@ -1,5 +1,5 @@
-from datetime import datetime
 from typing import Optional
+from datetime import datetime
 from sqlmodel import Field, SQLModel
 
 class Job(SQLModel, table=True):
@@ -12,7 +12,7 @@ class Job(SQLModel, table=True):
     started_at: Optional[datetime] = Field(default=None)
     completed_at: Optional[datetime] = Field(default=None)
     trained_at_server: Optional[str] = Field(default=None)
-    trained_at_gpu: Optional[str] = Field(default=None)
+    trained_at_gpus: Optional[str] = Field(default=None)
 
     user_id: Optional[int] = Field(default=None, foreign_key="user.id")
     created_at: datetime = Field(default = datetime.utcnow())
