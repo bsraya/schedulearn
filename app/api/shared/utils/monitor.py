@@ -1,9 +1,10 @@
+import csv
+import subprocess
 from datetime import datetime
 from dataclasses import dataclass
-from typing import List
 from functools import total_ordering
-import subprocess
-import csv
+from sqlmodel import Session, select
+from app.api.models.system import System
 
 
 @total_ordering
@@ -22,6 +23,11 @@ class Gpu:
 
     def __str__(self):
         return f"{self.machine_id},{self.server},{self.uuid},{self.id},{self.name},{self.utilization},{self.memory_free},{self.memory_used},{self.memory_total},{self.timestamp}"
+
+
+def get_scheduler(engine) -> str:
+    with Session(engine) as session:
+        return session.exec(select(System).where(System.configuration == "scheduler")).first().value
 
 
 def get_gpus() -> list[Gpu]:
